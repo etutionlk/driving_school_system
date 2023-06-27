@@ -7,15 +7,20 @@ Desc: manage.py
 """
 import click
 from flask.cli import with_appcontext
+from app.extensions import db
 
 
 # create command function
 @click.command(name='create')
 @with_appcontext
-def create(db):
+def create():
     """Create all database tables."""
-    print("hello")
+    print("Database Seeding Process Successfully Started.")
+    db.drop_all()
+    # db.session.add(User("root", "root@etutionlk.com"))
     db.create_all()
+    db.session.commit()
+    print("Database is Successfully Seeded.")
 
 
 # add command function to cli commands

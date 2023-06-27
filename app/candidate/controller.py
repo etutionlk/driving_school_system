@@ -7,12 +7,14 @@ Desc: controller.py
 """
 from flask_restx import Resource
 from app.candidate.schema import candidate, candidate_model
+from app.candidate.service import CandidateService
 
 
 @candidate.route("/<int:id>")
 class Candidate(Resource):
     def get(self, id):
-        return {'task': 'Say Hello, World!'}, 201
+        user = CandidateService.get_user(id=id)
+        return {'task': 'Say Hello, {}!'.format(user[0].username)}, 201
 
     @candidate.expect(candidate_model)
     def post(self):

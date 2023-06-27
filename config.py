@@ -19,4 +19,5 @@ class Config(object):
 class ProductionConfig(Config):
     DEVELOPMENT = False
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:letmein@localhost/driving_school'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:letmein@localhost:3306/driving_school'
