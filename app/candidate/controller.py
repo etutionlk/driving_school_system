@@ -5,14 +5,8 @@ Contact : etutionlk@gmail.com
 Time : 20/06/2023 8:21 AM
 Desc: controller.py
 """
-from flask_restx import Resource, Namespace, fields
-
-candidate = Namespace('Candidate', description='Candidate related operations')
-
-candidate_model = candidate.model("Course", {
-    "id": fields.Integer,
-    "name": fields.String
-})
+from flask_restx import Resource
+from app.candidate.schema import candidate, candidate_model
 
 
 @candidate.route("/<int:id>")

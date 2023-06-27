@@ -1,9 +1,9 @@
 """
-Name : __init__.py
+Name : application.py
 Author : Chinthaka Maduranga
 Contact : etutionlk@gmail.com
 Time : 20/06/2023 8:21 AM
-Desc: __init__.py
+Desc: application.py
 """
 from app.candidate.controller import candidate
 
