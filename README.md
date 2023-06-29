@@ -22,6 +22,23 @@ Run flask app
 ``` flask --app application run```
 
 
+### Seed the Database
+
+Initialize the db migrations
+
+```flask --app applicaation db init```
+
+Start database migration
+
+```flask --app application db migrate```
+
+Upgrade the database
+
+```flask --app application db upgrade```
+
+Downgrade the database
+
+```flask --app application db downgrade```
 
 Additional Commands to install packages in linux env (ubuntu)
 ```

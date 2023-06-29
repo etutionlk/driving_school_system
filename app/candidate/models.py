@@ -6,17 +6,26 @@ Time : 09/04/2023 6:48 PM
 Desc: models
 """
 from app.extensions import db
+from app.util import Sex, CandidateStatus
 
 
-class User(db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+class Candidate(db.Model):
+    __tablename__ = "candidate"
+    candidate_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(80), unique=True, nullable=False)
+    fullname = db.Column(db.String(120), unique=True, nullable=False)
+    date_of_birth = db.Column(db.DateTime, unique=True, nullable=False)
+    nic_no = db.Column(db.String(40), unique=True, nullable=False, comment="National Identity Card No.")
+    address = db.Column(db.Text, unique=True, nullable=False)
+    sex = db.Column(db.Enum(Sex), unique=True, nullable=False)
+    has_vehicle_licence = db.Column(db.Boolean, unique=True, nullable=False,
+                                    comment='if already have license true otherwise false')
+    registered_date = db.Column(db.DateTime, unique=True, nullable=False)
+    status = db.Column(db.Enum(CandidateStatus), unique=True, nullable=False)
 
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
+    def __init__(self, candidate_id, fullname):
+        self.candidate_id = candidate_id
+        self.fullname = fullname
 
     def __repr__(self):
-        return '<User %r %r>' % self.username, self.email
+        return '<Candidate %r %r>' % self.candidate_id, self.fullname
