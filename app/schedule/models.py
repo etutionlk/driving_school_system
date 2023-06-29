@@ -12,7 +12,7 @@ from app.util import LessonStatus
 class LessonSchedule(db.Model):
     __tablename__ = "lesson_schedule"
     lesson_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    candidate_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id"))
+    candidate_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id", onupdate="CASCADE", ondelete="CASCADE"))
     licence_category_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id")) # TODO: specify the foreign key
     instructor_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id")) # TODO: specify the foreign key
     vehicle_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id")) # TODO: specify the foreign key
