@@ -12,10 +12,8 @@ from app.util import Status
 class Instructor(db.Model):
     __tablename__ = "instructor"
     instructor_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id")) # TODO: foreign key
+    user_id = db.Column(db.Integer, db.ForeignKey("user.usr_id"))
     driving_licence_number = db.Column(db.String(120), unique=True, nullable=False)
-    joined_date = db.Column(db.Datetime, nullable=False)
-    resigned_date = db.Column(db.Datetime, nullable=False)
     status = db.Column(db.Enum(Status), nullable=False)
 
     def __init__(self, instructor_id, user_id):

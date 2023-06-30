@@ -15,6 +15,9 @@ class Candidate(db.Model):
     title = db.Column(db.String(40), nullable=False, comment="Ex: Mr., Mrs., Ms., Rev., ")
     fullname = db.Column(db.String(120), nullable=False)
     date_of_birth = db.Column(db.DateTime, nullable=False)
+    mobile_no_1 = db.Column(db.String(40), nullable=False)
+    mobile_no_2 = db.Column(db.String(40), nullable=True, comment="This number is used to contact candidate, "
+                                                                  "if his/her mobile number is on not responding.")
     nic_no = db.Column(db.String(40), unique=True, nullable=False, comment="National Identity Card No.")
     address = db.Column(db.Text, nullable=True)
     sex = db.Column(db.Enum(Sex), nullable=False)
