@@ -9,7 +9,7 @@ from app.extensions import db
 from app.util import ExamStatus
 
 
-class WrittenExam(db.candidate_id):
+class WrittenExam(db.Model):
     __tablename__ = "written_exam"
     exam_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     candidate_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id"))

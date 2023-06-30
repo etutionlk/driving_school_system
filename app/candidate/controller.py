@@ -14,7 +14,7 @@ from app.candidate.service import CandidateService
 class Candidate(Resource):
     def get(self, id):
         user = CandidateService.get_user(id=id)
-        return {'task': 'Say Hello, {}!'.format(user[0].username)}, 201
+        return {'task': 'Say Hello, {}!'.format(user)}, 201
 
     @candidate.expect(candidate_model)
     def post(self):

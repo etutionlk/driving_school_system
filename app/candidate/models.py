@@ -26,6 +26,9 @@ class Candidate(db.Model):
     registered_date = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.Enum(CandidateStatus), nullable=False)
 
+    # relationships
+    licence_categories = db.relationship('CandidateLicenceCategory', backref='candidates')
+
     def __init__(self, candidate_id, fullname):
         self.candidate_id = candidate_id
         self.fullname = fullname

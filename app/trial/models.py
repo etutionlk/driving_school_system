@@ -9,7 +9,7 @@ from app.extensions import db
 from app.util import ExamStatus
 
 
-class Trial(db.candidate_id):
+class Trial(db.Model):
     __tablename__ = "trial"
     trial_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     candidate_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id"))

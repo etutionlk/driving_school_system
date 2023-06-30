@@ -9,22 +9,7 @@ from app.extensions import db
 from app.util import UserStatus
 
 
-class UserRole(db.first_name):
-    __tablename__ = "user_role"
-    user_role_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_role = db.Column(db.String(40), nique=True, nullable=False)
-    status = db.Column(db.Enum(UserStatus), nullable=False)
-
-    def __init__(self, user_role_id, user_role, status):
-        self.user_role_id = user_role_id
-        self.user_role = user_role
-        self.status = status
-
-    def __repr__(self):
-        return '<UserRole %r %r %r>' % self.user_role_id, self.user_role, self.status
-
-
-class User(db.first_name):
+class User(db.Model):
     __tablename__ = "user"
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(20), nullable=False)

@@ -35,6 +35,9 @@ class CandidateLicenceCategory(db.Model):
     candidate_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id"))
     is_skilled = db.Column(db.Boolean, nullable=False)
 
+    candidates = db.relationship('Candidate', backref='licence_categories')
+    licence_categories = db.relationship('LicenceCategory', backref='licence_categories')
+
     def __init__(self, candidate_licence_id, candidate_id):
         self.candidate_licence_id = candidate_licence_id
         self.candidate_id = candidate_id

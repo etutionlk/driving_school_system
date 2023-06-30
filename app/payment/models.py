@@ -15,7 +15,7 @@ class CandidatePayment(db.Model):
     candidate_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id"))
     agreed_amount = db.Column(db.Float, nullable=False)
     paid_amount = db.Column(db.Float, nullable=False)
-    paid_date = db.Column(db.Datetime, nullable=False)
+    paid_date = db.Column(db.DateTime, nullable=False)
     due_amount = db.Column(db.Float, nullable=False)
     payment_mode = db.Column(db.Enum(PaymentMode), nullable=False, comment="specifying the payment is used for.")
 
