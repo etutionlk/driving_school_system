@@ -32,3 +32,14 @@ class LessonStatus(enum.Enum):
     CANCELLED = "CANCELLED"
     POSTPONED = "POSTPONED"
     ABSENT = "ABSENT"
+
+
+class Status(enum.Enum):
+    ENABLED = "ENABLED"
+    DISABLED = "DISABLED"
+
+
+class ExamStatus(enum.Enum):
+    PASSED = "PASSED"
+    FAILED = "FAILED"
+    ABSENT = "ABSENT"

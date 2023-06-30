@@ -12,16 +12,16 @@ from app.util import Sex, CandidateStatus
 class Candidate(db.Model):
     __tablename__ = "candidate"
     candidate_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(80), unique=True, nullable=False)
-    fullname = db.Column(db.String(120), unique=True, nullable=False)
-    date_of_birth = db.Column(db.DateTime, unique=True, nullable=False)
+    title = db.Column(db.String(40), nullable=False, comment="Ex: Mr., Mrs., Ms., Rev., ")
+    fullname = db.Column(db.String(120), nullable=False)
+    date_of_birth = db.Column(db.DateTime, nullable=False)
     nic_no = db.Column(db.String(40), unique=True, nullable=False, comment="National Identity Card No.")
-    address = db.Column(db.Text, unique=True, nullable=False)
-    sex = db.Column(db.Enum(Sex), unique=True, nullable=False)
-    has_vehicle_licence = db.Column(db.Boolean, unique=True, nullable=False,
+    address = db.Column(db.Text, nullable=True)
+    sex = db.Column(db.Enum(Sex), nullable=False)
+    has_vehicle_licence = db.Column(db.Boolean, nullable=False,
                                     comment='if already have license true otherwise false')
-    registered_date = db.Column(db.DateTime, unique=True, nullable=False)
-    status = db.Column(db.Enum(CandidateStatus), unique=True, nullable=False)
+    registered_date = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.Enum(CandidateStatus), nullable=False)
 
     def __init__(self, candidate_id, fullname):
         self.candidate_id = candidate_id
