@@ -7,6 +7,7 @@ Desc: models
 """
 from app.extensions import db
 from app.util import Sex, CandidateStatus
+from app.util.constants import CASCADE
 
 
 class Candidate(db.Model):
@@ -27,7 +28,11 @@ class Candidate(db.Model):
     status = db.Column(db.Enum(CandidateStatus), nullable=False)
 
     # relationships
-    licence_categories = db.relationship('CandidateLicenceCategory', backref='candidates')
+    licence_categories = db.relationship('CandidateLicenceCategory', backref='candidate', cascade=CASCADE)
+    written_exams = db.relationship('WrittenExam', backref='candidate', cascade=CASCADE)
+    lesson_schedules = db.relationship('LessonSchedule', backref='candidate', cascade=CASCADE)
+    payments = db.relationship('CandidatePayment', backref='candidate', cascade=CASCADE)
+    trials = db.relationship('Trial', backref='candidate', cascade=CASCADE)
 
     def __init__(self, candidate_id, fullname):
         self.candidate_id = candidate_id

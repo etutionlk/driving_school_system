@@ -7,6 +7,7 @@ Desc: models.py
 """
 from app.extensions import db
 from app.util import Status
+from app.util.constants import CASCADE
 
 
 class LicenceCategory(db.Model):
@@ -19,6 +20,9 @@ class LicenceCategory(db.Model):
     skilled_no_of_lessons = db.Column(db.Integer, nullable=False)
     unskilled_no_of_lessons = db.Column(db.Integer, nullable=False)
     status = db.Column(db.Enum(Status), nullable=False)
+
+    # relationships
+    candidates = db.relationship('CandidateLicenceCategory', backref='licence_category', cascade=CASCADE)
 
     def __init__(self, licence_category_id, licence_category):
         self.licence_category_id = licence_category_id
@@ -34,9 +38,6 @@ class CandidateLicenceCategory(db.Model):
     licence_category_id = db.Column(db.Integer, db.ForeignKey("licence_category.licence_category_id"))
     candidate_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id"))
     is_skilled = db.Column(db.Boolean, nullable=False)
-
-    candidates = db.relationship('Candidate', backref='licence_categories')
-    licence_categories = db.relationship('LicenceCategory', backref='licence_categories')
 
     def __init__(self, candidate_licence_id, candidate_id):
         self.candidate_licence_id = candidate_licence_id

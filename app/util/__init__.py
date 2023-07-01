@@ -49,3 +49,10 @@ class UserStatus(enum.Enum):
     ENABLED = "ENABLED"
     DISABLED = "DISABLED"
     ON_HOLD = "ON_HOLD"
+
+
+class VehicleStatus(enum.Enum):
+    WORKING = "WORKING"
+    NOT_WORKING = "NOT_WORKING"
+    ON_SERVICING = "ON_SERVICING"
+    SOLD = "SOLD"

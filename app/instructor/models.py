@@ -7,6 +7,7 @@ Desc: models.py
 """
 from app.extensions import db
 from app.util import Status
+from app.util.constants import CASCADE
 
 
 class Instructor(db.Model):
@@ -15,6 +16,9 @@ class Instructor(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     driving_licence_number = db.Column(db.String(120), unique=True, nullable=False)
     status = db.Column(db.Enum(Status), nullable=False)
+
+    # relationships
+    lesson_schedules = db.relationship('LessonSchedule', backref='instructor', cascade=CASCADE)
 
     def __init__(self, instructor_id, user_id):
         self.instructor_id = instructor_id
