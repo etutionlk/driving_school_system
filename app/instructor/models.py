@@ -14,7 +14,7 @@ class Instructor(db.Model):
     __tablename__ = "instructor"
     instructor_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
-    driving_licence_number = db.Column(db.String(120), unique=True, nullable=False)
+    driving_licence_number = db.Column(db.String(120), unique=True, nullable=False, index=True)
     status = db.Column(db.Enum(Status), nullable=False)
 
     # relationships

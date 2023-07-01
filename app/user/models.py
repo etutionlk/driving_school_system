@@ -16,21 +16,20 @@ class User(db.Model):
     title = db.Column(db.String(20), nullable=False)
     first_name = db.Column(db.String(60), nullable=False)
     last_name = db.Column(db.String(60), nullable=False)
-    nic_no = db.Column(db.String(40), unique=True, nullable=False)
+    nic_no = db.Column(db.String(40), unique=True, nullable=False, index=True)
     permanent_address = db.Column(db.Text, nullable=False)
     mobile_no = db.Column(db.String(40), nullable=True)
-    email_address = db.Column(db.String(120), nullable=True)
+    email_address = db.Column(db.String(120), nullable=True, index=True)
     designation = db.Column(db.String(80), nullable=False)
     joined_date = db.Column(db.Date, nullable=False)
     resigned_date = db.Column(db.Date, nullable=False)
-    username = db.Column(db.String(60), unique=True, nullable=False)
-    password = db.Column(db.String(64), unique=True, nullable=False)
+    username = db.Column(db.String(60), unique=True, nullable=False, index=True)
+    password = db.Column(db.String(64), nullable=False)
     user_role_id = db.Column(db.Integer, db.ForeignKey("user_role.user_role_id"))
     status = db.Column(db.Enum(UserStatus), nullable=False)
 
     # relationships
     instructors = db.relationship('Instructor', backref='user_details', cascade=CASCADE)
-    user_role = db.relationship('UserRole', backref='users', cascade=CASCADE)
     emergency_contact = db.relationship('UserEmergencyContact', backref='user', cascade=CASCADE)
 
     def __init__(self, user_id, first_name, status):
@@ -48,7 +47,7 @@ class UserEmergencyContact(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     contact_person = db.Column(db.String(120), nullable=True)
     relationship = db.Column(db.String(40), nullable=True)
-    contact_no = db.Column(db.String(40), nullable=True)
+    contact_no = db.Column(db.String(40), nullable=True, index=True)
 
     def __init__(self, contact_id, contact_person, relationship):
         self.contact_id = contact_id

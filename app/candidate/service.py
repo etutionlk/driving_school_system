@@ -15,5 +15,5 @@ class CandidateService:
 
     @staticmethod
     def get_user(id: str):
-        data = db_session.query(Candidate).filter(Candidate.id == id).all()
+        data = db_session.query(Candidate).filter(Candidate.candidate_id == id).all()
         return data

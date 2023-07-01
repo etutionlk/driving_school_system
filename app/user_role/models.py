@@ -7,13 +7,17 @@ Desc: models.py
 """
 from app.extensions import db
 from app.util import UserStatus
+from app.util.constants import CASCADE
 
 
 class UserRole(db.Model):
     __tablename__ = "user_role"
     user_role_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_role = db.Column(db.String(40), unique=True, nullable=False)
+    user_role = db.Column(db.String(40), unique=True, nullable=False, index=True)
     status = db.Column(db.Enum(UserStatus), nullable=False)
+
+    # rlationship
+    users = db.relationship('User', backref='user_role', cascade=CASCADE)
 
     def __init__(self, user_role_id, user_role, status):
         self.user_role_id = user_role_id

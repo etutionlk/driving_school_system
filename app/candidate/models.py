@@ -19,7 +19,7 @@ class Candidate(db.Model):
     mobile_no_1 = db.Column(db.String(40), nullable=False)
     mobile_no_2 = db.Column(db.String(40), nullable=True, comment="This number is used to contact candidate, "
                                                                   "if his/her mobile number is on not responding.")
-    nic_no = db.Column(db.String(40), unique=True, nullable=False, comment="National Identity Card No.")
+    nic_no = db.Column(db.String(40), unique=True, nullable=False, comment="National Identity Card No.", index=True)
     address = db.Column(db.Text, nullable=True)
     sex = db.Column(db.Enum(Sex), nullable=False)
     has_vehicle_licence = db.Column(db.Boolean, nullable=False,

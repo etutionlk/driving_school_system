@@ -13,7 +13,7 @@ class WrittenExam(db.Model):
     __tablename__ = "written_exam"
     exam_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     candidate_id = db.Column(db.Integer, db.ForeignKey("candidate.candidate_id"))
-    exam_date = db.Column(db.Date, nullable=False)
+    exam_date = db.Column(db.Date, nullable=False, index=True)
     status = db.Column(db.Enum(ExamStatus), nullable=False)
 
     def __init__(self, exam_id, candidate_id, status):

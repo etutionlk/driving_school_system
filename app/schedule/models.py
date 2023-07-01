@@ -16,7 +16,8 @@ class LessonSchedule(db.Model):
     licence_category_id = db.Column(db.Integer, db.ForeignKey("licence_category.licence_category_id"))
     instructor_id = db.Column(db.Integer, db.ForeignKey("instructor.instructor_id"))
     vehicle_id = db.Column(db.Integer, db.ForeignKey("vehicle.vehicle_id"))
-    lesson_date = db.Column(db.DateTime, nullable=False)
+    lesson_date = db.Column(db.Date, nullable=False)
+    lesson_time = db.Column(db.Time, nullable=False)
     lesson_status = db.Column(db.Enum(LessonStatus), nullable=False)
 
     def __init__(self, lesson_id, candidate_id, lesson_status):

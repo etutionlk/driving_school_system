@@ -43,6 +43,7 @@ class ExamStatus(enum.Enum):
     PASSED = "PASSED"
     FAILED = "FAILED"
     ABSENT = "ABSENT"
+    POSTPONED = "POSTPONED"
 
 
 class UserStatus(enum.Enum):
