@@ -9,4 +9,4 @@ from app.candidate.controller import candidate
 
 
 def register_candidate(api):
-    api.add_namespace(candidate, path="/candidate")
+    api.add_namespace(candidate, path="/api")

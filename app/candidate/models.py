@@ -34,9 +34,5 @@ class Candidate(db.Model):
     payments = db.relationship('CandidatePayment', backref='candidate', cascade=CASCADE)
     trials = db.relationship('Trial', backref='candidate', cascade=CASCADE)
 
-    def __init__(self, candidate_id, fullname):
-        self.candidate_id = candidate_id
-        self.fullname = fullname
-
     def __repr__(self):
-        return '<Candidate %r %r>' % self.candidate_id, self.fullname
+        return '<Candidate %r %r>' % Candidate.candidate_id, Candidate.fullname
