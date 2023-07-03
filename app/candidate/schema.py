@@ -21,6 +21,14 @@ candidate_model = candidate.model("Candidate", {
     "has_vehicle_licence": fields.Boolean(required=True)
 })
 
+candidate_schedule_model = candidate.model("CandidateSchedule", {
+    "lesson_date": fields.String(default="2023-01-02"),
+    "lesson_time": fields.String(default="12:30:00"),
+    "instructor_name": fields.String(default="Anura Jayantha"),
+    "car_model": fields.String(default="Alto"),
+    "registration_no": fields.String(default="CS-1234")
+})
+
 candidate_response_model = candidate.model("CandidateResponse", {
     "candidate_id": fields.Integer(default=1),
     "fullname": fields.String(default="Tom Cruise"),
@@ -30,7 +38,11 @@ candidate_response_model = candidate.model("CandidateResponse", {
     "nic_no": fields.String(default="222222222V"),
     "address": fields.String(default="No: 22/A, Park Rd, Colombo"),
     "sex": fields.String(default="Male"),
-    "schedule": fields.List(fields.String(), default=[{"lesson_date": "2023-01-02", "lesson_time": "12:30:00",
-                                                      "instructor_name": "Anura Jayantha", "car_model": "Alto",
-                                                      "registration_no": "CS-1234"}])
+    "schedule": fields.List(fields.Nested(candidate_schedule_model))
+})
+
+
+candidate_error_response = candidate.model("CandidateErrorResponse", {
+    "is_error": fields.Boolean(default=True),
+    "message": fields.String(default="Reason for the error")
 })

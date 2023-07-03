@@ -10,7 +10,7 @@ from http import HTTPStatus
 
 from flask import jsonify, make_response, request
 from flask_restx import Resource
-from app.candidate.schema import candidate, candidate_model, candidate_response_model
+from app.candidate.schema import candidate, candidate_model, candidate_response_model, candidate_error_response
 from app.candidate.service import CandidateService
 from app.util import Sex, CandidateStatus
 from app.util.dto import CandidateDTO
@@ -62,6 +62,7 @@ class CandidateAll(Resource):
     @candidate.param("limit", "Limit")
     @candidate.param("required_schedule", "Load Schedules")
     @candidate.response(200, 'Success', [candidate_response_model])
+    @candidate.response(400, 'Bad Request', candidate_error_response)
     def get(self):
         """Get all candidates"""
         required_schedules = request.args.get('required_schedule', default=False, type=bool)
