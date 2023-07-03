@@ -18,7 +18,7 @@ from app.util.dto import CandidateDTO
 
 @candidate.route("/candidate/<int:candidate_id>")
 class Candidate(Resource):
-    @candidate.param("schedule", "Lesson Schedule", required=True)
+    @candidate.param("required_schedule", validate=True, description="Load Schedule")
     def get(self, candidate_id: str):
         """Get Candidate by candidate ID"""
         CandidateService.get_candidate(id=candidate_id)
