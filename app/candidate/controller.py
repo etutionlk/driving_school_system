@@ -61,14 +61,16 @@ class CandidateAll(Resource):
     @candidate.param("offset", "Offset")
     @candidate.param("limit", "Limit")
     @candidate.param("required_schedule", "Load Schedules")
-    @candidate.response(200, 'Success', [candidate_response_model])
-    @candidate.response(400, 'Bad Request', candidate_error_response)
+    @candidate.response(HTTPStatus.CREATED, 'Created', [candidate_response_model], validate=True)
+    @candidate.response(HTTPStatus.BAD_REQUEST, 'Bad Request', candidate_error_response)
     def get(self):
         """Get all candidates"""
-        required_schedules = request.args.get('required_schedule', default=False, type=bool)
-        offset = request.args.get('offset', default=0, type=int)
-        limit = request.args.get('limit', default=20, type=int)
+        try:
+            required_schedules = request.args.get('required_schedule', default=False, type=bool)
+            offset = request.args.get('offset', default=0, type=int)
+            limit = request.args.get('limit', default=20, type=int)
 
-        results = CandidateService.get_all_candidates(need_schedule=required_schedules, offset=offset, limit=limit)
-        print(results)
-        return make_response(jsonify(results), HTTPStatus.CREATED)
+            results = CandidateService.get_all_candidates(need_schedule=required_schedules, offset=offset, limit=limit)
+            return make_response(jsonify(results), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
