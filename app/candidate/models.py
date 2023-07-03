@@ -6,16 +6,16 @@ Time : 09/04/2023 6:48 PM
 Desc: models
 """
 from app.extensions import db
-from app.util import Sex, CandidateStatus
+from app.util import Sex, CandidateStatus, Title
 from app.util.constants import CASCADE
 
 
 class Candidate(db.Model):
     __tablename__ = "candidate"
     candidate_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(40), nullable=False, comment="Ex: Mr., Mrs., Ms., Rev., ")
+    title = db.Column(db.Enum(Title), nullable=False, comment="Ex: Mr., Mrs., Ms., Rev., ")
     fullname = db.Column(db.String(120), nullable=False)
-    date_of_birth = db.Column(db.DateTime, nullable=False)
+    date_of_birth = db.Column(db.Date, nullable=False)
     mobile_no_1 = db.Column(db.String(40), nullable=False)
     mobile_no_2 = db.Column(db.String(40), nullable=True, comment="This number is used to contact candidate, "
                                                                   "if his/her mobile number is on not responding.")

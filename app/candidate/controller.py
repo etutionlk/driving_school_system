@@ -21,7 +21,7 @@ class Candidate(Resource):
     @candidate.param("schedule", "Lesson Schedule", required=True)
     def get(self, candidate_id: str):
         """Get Candidate by candidate ID"""
-        CandidateService.get_user(id=candidate_id)
+        CandidateService.get_candidate(id=candidate_id)
         return {'task': 'Say Hello, {}!'.format(candidate_id)}, 201
 
     def put(self, candidate_id: str):
@@ -40,16 +40,16 @@ class CandidateCreate(Resource):
         """Register a new candidate"""
         try:
             request_data = request.get_json()
-            CandidateDTO(title=request_data["title"], fullname=request_data["fullname"],
+            candidate_dto = CandidateDTO(title=request_data["title"], fullname=request_data["fullname"],
                                          date_of_birth=request_data["date_of_birth"],
                                          mobile_no_1=request_data["mobile_no_1"], nic_no=request_data["nic_no"],
                                          mobile_no_2=request_data["mobile_no_2"] if "mobile_no_2" in request_data else None,
                                          address=request_data["address"],
-                                         sex=Sex.MALE if request_data["sex"].lower() == "male" else Sex.FEMALE,
+                                         sex=request_data["sex"].upper(),
                                          has_vehicle_licence=request_data["has_vehicle_licence"],
-                                         registered_date=datetime.strptime(request_data["registered_date"], '%Y-%m-%d'),
+                                         registered_date=datetime.now(),
                                          status=CandidateStatus.ENABLED)
-            CandidateService.save_user(request_data=request_data)
+            CandidateService.save_candidate(candidate_data=candidate_dto)
             return make_response(jsonify({"message": "candidate added successfully."}), HTTPStatus.CREATED)
         except Exception as e:
             return make_response(jsonify({"message": str(e), "is_error": True}),
@@ -58,6 +58,9 @@ class CandidateCreate(Resource):
 
 @candidate.route("/candidate/all")
 class CandidateAll(Resource):
+    @candidate.param("offset", "Offset")
+    @candidate.param("limit", "Limit")
+    @candidate.param("schedules", "Load Schedules")
     def get(self):
         """Get all candidates"""
         return {'task': 'Say Hello, {}!'.format("")}, 201

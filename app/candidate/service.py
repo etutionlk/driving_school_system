@@ -8,6 +8,8 @@ Desc: service
 import traceback
 from datetime import datetime
 
+from sqlalchemy.exc import NoResultFound, DatabaseError
+
 from app.candidate.models import Candidate
 from app.extensions import db
 from app.util import CandidateStatus, Sex
@@ -19,24 +21,49 @@ session = db.session
 class CandidateService:
 
     @staticmethod
-    def get_user(id: str):
-        data = session.query(Candidate).filter(Candidate.candidate_id == id).all()
+    def get_candidate_by_candidate_id(candidate_id: int):
+        try:
+            data = session.query(Candidate).filter(Candidate.candidate_id == candidate_id).one()
+        except DatabaseError as e:
+            print(traceback.format_exc())
+            raise e
+        except NoResultFound:
+            print(traceback.format_exc())
+            return None
+
         return data
 
     @staticmethod
-    def save_user(request_data: dict):
+    def get_candidate_by_nic_no(nic_no: str):
         try:
-            # print(candidate_data.model_dump_json())
-            session.add(Candidate(title=request_data["title"], fullname=request_data["fullname"],
-                                     date_of_birth=request_data["date_of_birth"],
-                                     mobile_no_1=request_data["mobile_no_1"], nic_no=request_data["nic_no"],
-                                     mobile_no_2=request_data["mobile_no_2"] if "mobile_no_2" in request_data else None,
-                                     address=request_data["address"],
-                                     sex=Sex.MALE if request_data["sex"].lower() == "male" else Sex.FEMALE,
-                                     has_vehicle_licence=request_data["has_vehicle_licence"],
-                                     registered_date=datetime.strptime(request_data["registered_date"], '%Y-%m-%d'),
-                                     status=CandidateStatus.ENABLED))
-            session.commit()
-        except Exception:
+            data = session.query(Candidate).filter(Candidate.nic_no == nic_no).one()
+        except DatabaseError as e:
             print(traceback.format_exc())
+            raise e
+        except NoResultFound:
+            print(traceback.format_exc())
+            return None
 
+        return data.candidate_id
+
+    @staticmethod
+    def save_candidate(candidate_data: CandidateDTO):
+        try:
+            candidate_id = CandidateService.get_candidate_by_nic_no(nic_no=candidate_data.nic_no)
+
+            if candidate_id:
+                raise ValueError("Candidate {} is already registered.".format(candidate_data.fullname))
+
+            session.add(Candidate(title=candidate_data.title, fullname=candidate_data.fullname,
+                                  date_of_birth=candidate_data.date_of_birth,
+                                  mobile_no_1=candidate_data.mobile_no_1, nic_no=candidate_data.nic_no,
+                                  mobile_no_2=candidate_data.mobile_no_2, address=candidate_data.address,
+                                  sex=candidate_data.sex, has_vehicle_licence=candidate_data.has_vehicle_licence,
+                                  registered_date=candidate_data.registered_date, status=candidate_data.status))
+            session.commit()
+        except DatabaseError as e:
+            print(traceback.format_exc())
+            raise e
+        except Exception as e:
+            print(traceback.format_exc())
+            raise e

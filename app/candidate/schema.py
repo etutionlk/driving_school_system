@@ -18,7 +18,5 @@ candidate_model = candidate.model("Candidate", {
     "nic_no": fields.String(required=True),
     "address": fields.String,
     "sex": fields.String(required=True),
-    "has_vehicle_licence": fields.Boolean(required=True),
-    "registered_date": fields.String,
-    "status": fields.String
+    "has_vehicle_licence": fields.Boolean(required=True)
 })

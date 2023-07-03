@@ -8,6 +8,14 @@ Desc: __init__.py.py
 import enum
 
 
+class Title(enum.Enum):
+    MR = "Mr."
+    MRS = "Mrs."
+    MISS = "Miss."
+    MS = "Ms."
+    REV = "Rev."
+
+
 class Sex(enum.Enum):
     MALE = "MALE"
     FEMALE = "FEMALE"
