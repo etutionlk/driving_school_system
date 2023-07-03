@@ -19,11 +19,3 @@ class LessonSchedule(db.Model):
     lesson_date = db.Column(db.Date, nullable=False)
     lesson_time = db.Column(db.Time, nullable=False)
     lesson_status = db.Column(db.Enum(LessonStatus), nullable=False)
-
-    def __init__(self, lesson_id, candidate_id, lesson_status):
-        self.lesson_id = lesson_id
-        self.candidate_id = candidate_id
-        self.lesson_status = lesson_status
-
-    def __repr__(self):
-        return '<LessonSchedule %r %r %r>' % self.lesson_id, self.candidate_id, self.lesson_status

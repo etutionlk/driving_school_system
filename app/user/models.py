@@ -22,7 +22,7 @@ class User(db.Model):
     email_address = db.Column(db.String(120), nullable=True, index=True)
     designation = db.Column(db.String(80), nullable=False)
     joined_date = db.Column(db.Date, nullable=False)
-    resigned_date = db.Column(db.Date, nullable=False)
+    resigned_date = db.Column(db.Date, nullable=True)
     username = db.Column(db.String(60), unique=True, nullable=False, index=True)
     password = db.Column(db.String(64), nullable=False)
     user_role_id = db.Column(db.Integer, db.ForeignKey("user_role.user_role_id"))

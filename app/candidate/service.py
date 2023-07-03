@@ -67,3 +67,24 @@ class CandidateService:
         except Exception as e:
             print(traceback.format_exc())
             raise e
+
+    @staticmethod
+    def get_all_candidates(need_schedule: bool, offset: int, limit: int):
+        all_results = []
+        try:
+            results = session.query(Candidate).filter().offset(offset).limit(limit).all()
+            for result in results:
+                all_results.append({
+                    "candidate_id": result.candidate_id,
+                    "candidate_name": result.fullname,
+                    "schedule": [{"date": str(schedule.lesson_date), "car": schedule.vehicle.model} for schedule in result.lesson_schedules]
+                })
+
+        except DatabaseError as e:
+            print(traceback.format_exc())
+            raise e
+        except NoResultFound:
+            print(traceback.format_exc())
+            return None
+
+        return all_results
