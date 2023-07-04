@@ -19,10 +19,18 @@ from app.util.dto import CandidateDTO
 @candidate.route("/candidate/<int:candidate_id>")
 class Candidate(Resource):
     @candidate.param("required_schedule", validate=True, description="Load Schedule")
-    def get(self, candidate_id: str):
+    @candidate.response(HTTPStatus.CREATED, 'Created', candidate_response_model, validate=True)
+    @candidate.response(HTTPStatus.BAD_REQUEST, 'Bad Request', candidate_error_response)
+    def get(self, candidate_id: int):
         """Get Candidate by candidate ID"""
-        CandidateService.get_candidate(id=candidate_id)
-        return {'task': 'Say Hello, {}!'.format(candidate_id)}, 201
+        try:
+            required_schedule = request.args.get('required_schedule', default=False, type=bool)
+            result = CandidateService.get_candidate_by_candidate_id(candidate_id=candidate_id,
+                                                                    required_schedule=required_schedule)
+            print(result)
+            return make_response(jsonify(result), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
     def put(self, candidate_id: str):
         """Update Candidate details"""
@@ -43,7 +51,8 @@ class CandidateCreate(Resource):
             candidate_dto = CandidateDTO(title=request_data["title"], fullname=request_data["fullname"],
                                          date_of_birth=request_data["date_of_birth"],
                                          mobile_no_1=request_data["mobile_no_1"], nic_no=request_data["nic_no"],
-                                         mobile_no_2=request_data["mobile_no_2"] if "mobile_no_2" in request_data else None,
+                                         mobile_no_2=request_data[
+                                             "mobile_no_2"] if "mobile_no_2" in request_data else None,
                                          address=request_data["address"],
                                          sex=request_data["sex"].upper(),
                                          has_vehicle_licence=request_data["has_vehicle_licence"],
@@ -66,11 +75,11 @@ class CandidateAll(Resource):
     def get(self):
         """Get all candidates"""
         try:
-            required_schedules = request.args.get('required_schedule', default=False, type=bool)
+            required_schedule = request.args.get('required_schedule', default=False, type=bool)
             offset = request.args.get('offset', default=0, type=int)
             limit = request.args.get('limit', default=20, type=int)
 
-            results = CandidateService.get_all_candidates(need_schedule=required_schedules, offset=offset, limit=limit)
+            results = CandidateService.get_all_candidates(need_schedule=required_schedule, offset=offset, limit=limit)
             return make_response(jsonify(results), HTTPStatus.CREATED)
         except Exception as e:
             return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
