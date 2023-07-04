@@ -21,7 +21,7 @@ db_session = db.session
 class CandidateService:
 
     @staticmethod
-    def get_candidate_by_candidate_id(candidate_id: int, required_schedule: bool):
+    def get_candidate_by_candidate_id(candidate_id: int, required_schedule: bool) -> dict:
         result = {}
         try:
             data = db_session.query(Candidate).filter(Candidate.candidate_id == candidate_id).one()
@@ -62,7 +62,7 @@ class CandidateService:
         return data.candidate_id
 
     @staticmethod
-    def save_candidate(candidate_data: CandidateDTO):
+    def save_candidate(candidate_data: CandidateDTO) -> bool:
         try:
             candidate_id = CandidateService.get_candidate_by_nic_no(nic_no=candidate_data.nic_no)
 
@@ -83,8 +83,10 @@ class CandidateService:
             print(traceback.format_exc())
             raise e
 
+        return True
+
     @staticmethod
-    def get_all_candidates(need_schedule: bool, offset: int, limit: int):
+    def get_all_candidates(need_schedule: bool, offset: int, limit: int) -> list:
         all_results = []
         try:
             results = db_session.query(Candidate).filter().offset(offset).limit(limit).all()
@@ -101,6 +103,22 @@ class CandidateService:
             raise e
         except NoResultFound:
             print(traceback.format_exc())
-            return None
 
         return all_results
+
+
+    @staticmethod
+    def delete_candidate(candidate_id: str) ->bool:
+        try:
+            record = db_session.query(Candidate).filter(Candidate.candidate_id == candidate_id).one()
+            db_session.delete(record)
+            db_session.commit()
+        except DatabaseError as e:
+            print(traceback.format_exc())
+            raise e
+        except NoResultFound:
+            print(traceback.format_exc())
+            return False
+
+        return True
+

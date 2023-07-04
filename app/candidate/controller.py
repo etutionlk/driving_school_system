@@ -27,7 +27,7 @@ class Candidate(Resource):
             required_schedule = request.args.get('required_schedule', default=False, type=bool)
             result = CandidateService.get_candidate_by_candidate_id(candidate_id=candidate_id,
                                                                     required_schedule=required_schedule)
-            print(result)
+
             return make_response(jsonify(result), HTTPStatus.CREATED)
         except Exception as e:
             return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
@@ -38,7 +38,12 @@ class Candidate(Resource):
 
     def delete(self, candidate_id: str):
         """Delete Candidate by candidate ID"""
-        return jsonify({"message": "candidate deleted successfully."}), 201
+        try:
+            CandidateService.delete_candidate(candidate_id=candidate_id)
+
+            return make_response(jsonify({"message": "candidate deleted successfully."}), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
 
 @candidate.route("/candidate")
