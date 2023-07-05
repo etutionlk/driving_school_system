@@ -101,14 +101,14 @@ class CandidateService:
         except DatabaseError as e:
             print(traceback.format_exc())
             raise e
-        except NoResultFound:
+        except NoResultFound as e:
             print(traceback.format_exc())
 
         return all_results
 
 
     @staticmethod
-    def delete_candidate(candidate_id: str) ->bool:
+    def delete_candidate(candidate_id: int) ->bool:
         try:
             record = db_session.query(Candidate).filter(Candidate.candidate_id == candidate_id).one()
             db_session.delete(record)
@@ -116,9 +116,9 @@ class CandidateService:
         except DatabaseError as e:
             print(traceback.format_exc())
             raise e
-        except NoResultFound:
+        except NoResultFound as e:
             print(traceback.format_exc())
-            return False
+            raise Exception("Candidate is not found.")
 
         return True
 

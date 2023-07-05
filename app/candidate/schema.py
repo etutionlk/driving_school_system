@@ -10,8 +10,8 @@ from flask_restx import Namespace, fields
 candidate = Namespace('Candidate', description='Candidate related operations')
 
 candidate_model = candidate.model("Candidate", {
-    "title": fields.String,
-    "fullname": fields.String,
+    "title": fields.String(required=True),
+    "fullname": fields.String(required=True),
     "date_of_birth": fields.String(required=True),
     "mobile_no_1": fields.String(required=True),
     "mobile_no_2": fields.String,
@@ -19,7 +19,19 @@ candidate_model = candidate.model("Candidate", {
     "address": fields.String,
     "sex": fields.String(required=True),
     "has_vehicle_licence": fields.Boolean(required=True)
-})
+}, strict=True)
+
+candidate_update_model = candidate.model("CandidateUpdateModel", {
+    "title": fields.String,
+    "fullname": fields.String,
+    "date_of_birth": fields.String,
+    "mobile_no_1": fields.String,
+    "mobile_no_2": fields.String,
+    "nic_no": fields.String,
+    "address": fields.String,
+    "sex": fields.String,
+    "has_vehicle_licence": fields.Boolean
+}, strict=True,)
 
 candidate_schedule_model = candidate.model("CandidateSchedule", {
     "lesson_date": fields.String(default="2023-01-02"),
@@ -44,5 +56,9 @@ candidate_response_model = candidate.model("CandidateResponse", {
 
 candidate_error_response = candidate.model("CandidateErrorResponse", {
     "is_error": fields.Boolean(default=True),
-    "message": fields.String(default="Reason for the error")
+    "message": fields.String(default="Bad Request")
+})
+
+candidate_success_response = candidate.model("CandidateSuccessResponse", {
+    "message": fields.String(default="Success")
 })

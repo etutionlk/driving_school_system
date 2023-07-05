@@ -5,14 +5,17 @@ Contact : etutionlk@gmail.com
 Time : 20/06/2023 8:21 AM
 Desc: controller.py
 """
+import traceback
 from datetime import datetime
 from http import HTTPStatus
 
+import jsonschema
 from flask import jsonify, make_response, request
 from flask_restx import Resource
-from app.candidate.schema import candidate, candidate_model, candidate_response_model, candidate_error_response
+from app.candidate.schema import candidate, candidate_model, candidate_response_model, candidate_error_response, \
+    candidate_success_response, candidate_update_model
 from app.candidate.service import CandidateService
-from app.util import Sex, CandidateStatus
+from app.util import CandidateStatus
 from app.util.dto import CandidateDTO
 
 
@@ -32,11 +35,19 @@ class Candidate(Resource):
         except Exception as e:
             return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
-    def put(self, candidate_id: str):
+    @candidate.response(HTTPStatus.CREATED, 'Created', candidate_success_response, validate=True)
+    @candidate.response(HTTPStatus.BAD_REQUEST, 'Bad Request', candidate_error_response)
+    @candidate.expect(candidate_update_model, validate=True)
+    def put(self, candidate_id: int):
         """Update Candidate details"""
-        return jsonify({"message": "candidate updated successfully."}), 201
+        try:
+            request_data = request.get_json()
+            return make_response(jsonify({"message": "candidate updated successfully."}), HTTPStatus.CREATED)
+        except Exception as e:
+            print(traceback.format_exc())
+            return make_response(jsonify({"message": str(e), "is_error": True}), HTTPStatus.INTERNAL_SERVER_ERROR)
 
-    def delete(self, candidate_id: str):
+    def delete(self, candidate_id: int):
         """Delete Candidate by candidate ID"""
         try:
             CandidateService.delete_candidate(candidate_id=candidate_id)
@@ -49,6 +60,8 @@ class Candidate(Resource):
 @candidate.route("/candidate")
 class CandidateCreate(Resource):
     @candidate.expect(candidate_model, validate=True)
+    @candidate.response(HTTPStatus.CREATED, 'Created', candidate_success_response, validate=True)
+    @candidate.response(HTTPStatus.BAD_REQUEST, 'Bad Request', candidate_error_response)
     def post(self):
         """Register a new candidate"""
         try:
