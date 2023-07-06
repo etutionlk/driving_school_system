@@ -14,6 +14,7 @@ from app.candidate.models import Candidate
 from app.extensions import db
 from app.util import CandidateStatus, Sex
 from app.util.dto import CandidateDTO
+from app.util.exceptions import NoResultFoundException
 
 db_session = db.session
 
@@ -118,7 +119,7 @@ class CandidateService:
             raise e
         except NoResultFound as e:
             print(traceback.format_exc())
-            raise Exception("Candidate is not found.")
+            raise NoResultFoundException(message="Candidate is not found.")
 
         return True
 
