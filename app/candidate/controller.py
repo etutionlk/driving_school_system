@@ -42,6 +42,7 @@ class Candidate(Resource):
         """Update Candidate details"""
         try:
             request_data = request.get_json()
+            CandidateService.update_candidate(candidate_id=candidate_id, data=request_data)
             return make_response(jsonify({"message": "candidate updated successfully."}), HTTPStatus.CREATED)
         except Exception as e:
             print(traceback.format_exc())

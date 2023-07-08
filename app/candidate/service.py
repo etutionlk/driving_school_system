@@ -22,7 +22,7 @@ db_session = db.session
 class CandidateService:
 
     @staticmethod
-    def get_candidate_by_candidate_id(candidate_id: int, required_schedule: bool) -> dict:
+    def get_candidate_by_candidate_id(candidate_id: int, required_schedule: bool = False) -> dict:
         result = {}
         try:
             data = db_session.query(Candidate).filter(Candidate.candidate_id == candidate_id).one()
@@ -87,6 +87,27 @@ class CandidateService:
         return True
 
     @staticmethod
+    def update_candidate(candidate_id: int, data: dict) -> bool:
+        try:
+            # check candidate is exists
+            has_candidate = CandidateService.get_candidate_by_candidate_id(candidate_id=candidate_id)
+            print(has_candidate)
+
+            if len(has_candidate) == 0:
+                raise NoResultFoundException(message="No Candidate Found.")
+
+            db_session.query(Candidate).filter(Candidate.candidate_id == candidate_id).update(data)
+            db_session.commit()
+        except DatabaseError as e:
+            print(traceback.format_exc())
+            raise e
+        except Exception as e:
+            print(traceback.format_exc())
+            raise e
+
+        return True
+
+    @staticmethod
     def get_all_candidates(need_schedule: bool, offset: int, limit: int) -> list:
         all_results = []
         try:
@@ -107,9 +128,8 @@ class CandidateService:
 
         return all_results
 
-
     @staticmethod
-    def delete_candidate(candidate_id: int) ->bool:
+    def delete_candidate(candidate_id: int) -> bool:
         try:
             record = db_session.query(Candidate).filter(Candidate.candidate_id == candidate_id).one()
             db_session.delete(record)
@@ -122,4 +142,3 @@ class CandidateService:
             raise NoResultFoundException(message="Candidate is not found.")
 
         return True
-
