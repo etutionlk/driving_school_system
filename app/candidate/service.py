@@ -91,7 +91,6 @@ class CandidateService:
         try:
             # check candidate is exists
             has_candidate = CandidateService.get_candidate_by_candidate_id(candidate_id=candidate_id)
-            print(has_candidate)
 
             if len(has_candidate) == 0:
                 raise NoResultFoundException(message="No Candidate Found.")

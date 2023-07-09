@@ -6,9 +6,10 @@ Time : 02/07/2023 7:55 PM
 Desc: dto.py
 """
 import enum
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
 
+import pydantic
 from pydantic import BaseModel, constr, field_validator
 
 from app.util import Sex, CandidateStatus, Title
@@ -17,12 +18,34 @@ from app.util import Sex, CandidateStatus, Title
 class CandidateDTO(BaseModel):
     title: Title
     fullname: constr()
-    date_of_birth: constr()
+    date_of_birth: date
     mobile_no_1: constr()
-    mobile_no_2: Optional[constr()]
+    mobile_no_2: Optional[constr()] = None
     nic_no: constr()
-    address: Optional[constr()]
+    address: Optional[constr()] = None
     sex: Sex
     has_vehicle_licence: bool
     registered_date: datetime
     status: CandidateStatus
+
+
+class CandidateUpdateDTO(BaseModel):
+    title: Optional[Title] = None
+    fullname: Optional[constr()] = None
+    date_of_birth: Optional[date] = None
+    mobile_no_1: Optional[constr()] = None
+    mobile_no_2: Optional[constr()] = None
+    nic_no: Optional[constr()] = None
+    address: Optional[constr()] = None
+    sex: Optional[Sex] = None
+    has_vehicle_licence: Optional[bool] = None
+
+    @field_validator("title", mode="before")
+    def title_validation(cls, value):
+        value = value.replace(".", "").upper()
+        print(value)
+        if value in Title._member_names_:
+            return Title[value]
+        else:
+            raise ValueError("Rev. Mr. Mrs. Ms.")
+

@@ -12,11 +12,13 @@ from http import HTTPStatus
 import jsonschema
 from flask import jsonify, make_response, request
 from flask_restx import Resource
+from pydantic import TypeAdapter
+
 from app.candidate.schema import candidate, candidate_model, candidate_response_model, candidate_error_response, \
     candidate_success_response, candidate_update_model
 from app.candidate.service import CandidateService
 from app.util import CandidateStatus
-from app.util.dto import CandidateDTO
+from app.util.dto import CandidateDTO, CandidateUpdateDTO
 
 
 @candidate.route("/candidate/<int:candidate_id>")
@@ -42,7 +44,9 @@ class Candidate(Resource):
         """Update Candidate details"""
         try:
             request_data = request.get_json()
-            CandidateService.update_candidate(candidate_id=candidate_id, data=request_data)
+            candidate_dto = CandidateUpdateDTO(**request_data)
+            filtered_date = {k: v for k, v in candidate_dto.model_dump().items() if v is not None}
+            CandidateService.update_candidate(candidate_id=candidate_id, data=filtered_date)
             return make_response(jsonify({"message": "candidate updated successfully."}), HTTPStatus.CREATED)
         except Exception as e:
             print(traceback.format_exc())
