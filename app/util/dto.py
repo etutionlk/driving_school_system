@@ -43,7 +43,6 @@ class CandidateUpdateDTO(BaseModel):
     @field_validator("title", mode="before")
     def title_validation(cls, value):
         value = value.replace(".", "").upper()
-        print(value)
         if value in Title._member_names_:
             return Title[value]
         else:
