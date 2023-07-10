@@ -54,11 +54,11 @@ candidate_response_model = candidate.model("CandidateResponse", {
 })
 
 
-candidate_error_response = candidate.model("CandidateErrorResponse", {
+candidate_error_response = candidate.model("ErrorResponse", {
     "is_error": fields.Boolean(default=True),
     "message": fields.String(default="Bad Request")
 })
 
-candidate_success_response = candidate.model("CandidateSuccessResponse", {
+candidate_success_response = candidate.model("SuccessResponse", {
     "message": fields.String(default="Success")
 })

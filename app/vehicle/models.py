@@ -13,17 +13,16 @@ from app.util.constants import CASCADE
 class VehicleManufacturer(db.Model):
     __tablename__ = "vehicle_manufacturer"
     manufacturer_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    manufacturer = db.Column(db.String(50), nullable=False)
+    manufacturer = db.Column(db.String(50), nullable=False, unique=True)
 
     # relationship
     vehicles = db.relationship('Vehicle', backref='manufacturer', cascade=CASCADE)
 
-    def __init__(self, manufacturer_id, manufacturer):
-        self.manufacturer_id = manufacturer_id
+    def __init__(self, manufacturer):
         self.manufacturer = manufacturer
 
     def __repr__(self):
-        return '<VehicleManufacturer %r %r>' % self.manufacturer_id, self.manufacturer
+        return '<VehicleManufacturer %r>' % self.manufacturer
 
 
 class Vehicle(db.Model):

@@ -9,10 +9,8 @@ import traceback
 from datetime import datetime
 from http import HTTPStatus
 
-import jsonschema
 from flask import jsonify, make_response, request
 from flask_restx import Resource
-from pydantic import TypeAdapter
 
 from app.candidate.schema import candidate, candidate_model, candidate_response_model, candidate_error_response, \
     candidate_success_response, candidate_update_model
@@ -39,6 +37,7 @@ class Candidate(Resource):
 
     @candidate.response(HTTPStatus.CREATED, 'Created', candidate_success_response, validate=True)
     @candidate.response(HTTPStatus.BAD_REQUEST, 'Bad Request', candidate_error_response)
+    @candidate.response(HTTPStatus.INTERNAL_SERVER_ERROR, 'Server Error', candidate_error_response)
     @candidate.expect(candidate_update_model, validate=True)
     def put(self, candidate_id: int):
         """Update Candidate details"""
