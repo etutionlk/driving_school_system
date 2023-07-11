@@ -7,8 +7,11 @@ Desc: controller.py
 """
 from http import HTTPStatus
 
+from flask import request, make_response, jsonify
 from flask_restx import Resource
-from app.vehicle.schema import vehicle, vehicle_model, vehicle_success_response, vehicle_error_response
+from app.vehicle.schema import vehicle, vehicle_model, vehicle_success_response, vehicle_error_response, \
+    vehicle_manufacturer_response_model
+from app.vehicle.service import VehicleService
 
 
 @vehicle.route("/vehicle/<int:vehicle_id>")
@@ -66,6 +69,18 @@ class VehicleAllByStatus(Resource):
 @vehicle.route("/vehicle_manufacturers")
 class VehicleManufacturers(Resource):
 
+    @vehicle.param("offset", "Offset")
+    @vehicle.param("limit", "Limit")
+    @vehicle.response(HTTPStatus.CREATED, 'Created', [vehicle_manufacturer_response_model], validate=True)
+    @vehicle.response(HTTPStatus.BAD_REQUEST, 'Bad Request', vehicle_error_response)
     def get(self):
         """Get all vehicle manufacturers"""
-        pass
+        try:
+            offset = request.args.get('offset', default=0, type=int)
+            limit = request.args.get('limit', default=20, type=int)
+
+            results = VehicleService.get_all_data(offset=offset, limit=limit)
+            return make_response(jsonify(results), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
+

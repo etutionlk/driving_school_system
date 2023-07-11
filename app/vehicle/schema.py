@@ -15,6 +15,11 @@ vehicle_model = vehicle.model("Vehicle", {
     "manufacturer_id": fields.Integer
 })
 
+vehicle_manufacturer_response_model = vehicle.model("VehicleManufacturerResponse", {
+    "manufacturer_id": fields.String(default=1),
+    "manufacturer": fields.String(default="Toyota")
+})
+
 vehicle_error_response = vehicle.model("ErrorResponse", {
     "is_error": fields.Boolean(default=True),
     "message": fields.String(default="Bad Request")

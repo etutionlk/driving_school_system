@@ -6,13 +6,10 @@ Time : 27/06/2023 12:53 PM
 Desc: service
 """
 import traceback
-from datetime import datetime
-
 from sqlalchemy.exc import NoResultFound, DatabaseError
 
 from app.candidate.models import Candidate
 from app.extensions import db
-from app.util import CandidateStatus, Sex
 from app.util.dto import CandidateDTO
 from app.util.exceptions import NoResultFoundException
 
