@@ -22,12 +22,7 @@ class Vehicle(Resource):
     def get(self, vehicle_id: int):
         """Get a vehicle details"""
         try:
-            offset = request.args.get('offset', type=int)
-            limit = request.args.get('limit', type=int)
-            status = request.args.get('status', type=str)
-
-            results = VehicleService.get_all_data(offset=offset if offset else None, limit=limit if limit else None,
-                                                  status=status if status else None, only_manufacturers=False)
+            results = VehicleService.get_data_by_id(record_id=vehicle_id, is_manufacturer=False)
             return make_response(jsonify(results), HTTPStatus.CREATED)
         except Exception as e:
             return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
@@ -82,7 +77,13 @@ class VehicleAllByStatus(Resource):
     @vehicle.param("status", "Vehicle Status")
     def get(self):
         """Get all registered vehicles by vehicle status"""
-        pass
+        try:
+            status = request.args.get('status', type=str)
+
+            results = VehicleService.get_all_data(status=status if status else None, only_manufacturers=False)
+            return make_response(jsonify(results), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
 
 @vehicle.route("/vehicle_manufacturers")

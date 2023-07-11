@@ -19,7 +19,7 @@ db_session = db.session
 
 class VehicleService:
     @staticmethod
-    def get_all_data(offset: int=None, limit: int=None, only_manufacturers: bool = True, status: str = None):
+    def get_all_data(offset: int = None, limit: int = None, only_manufacturers: bool = True, status: str = None):
         all_results = []
         try:
             if only_manufacturers:
@@ -39,18 +39,12 @@ class VehicleService:
             for result in results:
 
                 if only_manufacturers:
-                    all_results.append({
-                        "manufacturer_id": result.manufacturer_id,
-                        "manufacturer": result.manufacturer
-                    })
+                    all_results.append({"manufacturer_id": result.manufacturer_id, "manufacturer": result.manufacturer})
                 else:
-                    all_results.append({
-                        "vehicle_id": result.vehicle_id,
-                        "model": result.model,
-                        "registration_no": result.registration_no,
-                        "manufacturer": result.manufacturer.manufacturer,
-                        "status": result.status.value,
-                    })
+                    all_results.append({"vehicle_id": result.vehicle_id, "model": result.model,
+                                        "registration_no": result.registration_no,
+                                        "manufacturer": result.manufacturer.manufacturer,
+                                        "status": result.status.value})
 
         except DatabaseError as e:
             print(traceback.format_exc())
@@ -60,4 +54,26 @@ class VehicleService:
 
         return all_results
 
+    @staticmethod
+    def get_data_by_id(record_id: int, is_manufacturer: bool = False):
+        result = {}
+        try:
+            if is_manufacturer:
+                results = db_session.query(VehicleManufacturer). \
+                    filter(VehicleManufacturer.manufacturer_id == record_id).first()
+                result = {"manufacturer_id": results.manufacturer_id, "manufacturer": results.manufacturer}
 
+
+            else:
+                results = db_session.query(Vehicle).filter(Vehicle.vehicle_id == record_id).first()
+                result = {"vehicle_id": results.vehicle_id, "model": results.model,
+                          "registration_no": results.registration_no,
+                          "manufacturer": results.manufacturer.manufacturer, "status": results.status.value}
+
+        except DatabaseError as e:
+            print(traceback.format_exc())
+            raise e
+        except NoResultFound as e:
+            print(traceback.format_exc())
+
+        return result
