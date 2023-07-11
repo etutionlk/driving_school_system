@@ -19,10 +19,18 @@ class Vehicle(Resource):
 
     @vehicle.response(HTTPStatus.CREATED, 'Created', vehicle_success_response, validate=True)
     @vehicle.response(HTTPStatus.BAD_REQUEST, 'Bad Request', vehicle_error_response)
-    @vehicle.expect(vehicle_model, validate=True)
     def get(self, vehicle_id: int):
         """Get a vehicle details"""
-        pass
+        try:
+            offset = request.args.get('offset', type=int)
+            limit = request.args.get('limit', type=int)
+            status = request.args.get('status', type=str)
+
+            results = VehicleService.get_all_data(offset=offset if offset else None, limit=limit if limit else None,
+                                                  status=status if status else None, only_manufacturers=False)
+            return make_response(jsonify(results), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
     def put(self, vehicle_id: int):
         """Update vehicle details"""
@@ -56,7 +64,17 @@ class VehicleAll(Resource):
     @vehicle.param("status", "Vehicle Status")
     def get(self):
         """Get all registered vehicles"""
-        pass
+        try:
+            offset = request.args.get('offset', type=int)
+            limit = request.args.get('limit', type=int)
+            status = request.args.get('status', type=str)
+
+            results = VehicleService.get_all_data(offset=offset if offset else None, limit=limit if limit else None,
+                                                  status=status if status else None, only_manufacturers=False)
+            return make_response(jsonify(results), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
+
 
 @vehicle.route("/vehicles_by_status")
 class VehicleAllByStatus(Resource):
@@ -65,6 +83,7 @@ class VehicleAllByStatus(Resource):
     def get(self):
         """Get all registered vehicles by vehicle status"""
         pass
+
 
 @vehicle.route("/vehicle_manufacturers")
 class VehicleManufacturers(Resource):
@@ -76,11 +95,10 @@ class VehicleManufacturers(Resource):
     def get(self):
         """Get all vehicle manufacturers"""
         try:
-            offset = request.args.get('offset', default=0, type=int)
-            limit = request.args.get('limit', default=20, type=int)
+            offset = request.args.get('offset', type=int)
+            limit = request.args.get('limit', type=int)
 
-            results = VehicleService.get_all_data(offset=offset, limit=limit)
+            results = VehicleService.get_all_data(offset=offset if offset else None, limit=limit if limit else None)
             return make_response(jsonify(results), HTTPStatus.CREATED)
         except Exception as e:
             return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
-

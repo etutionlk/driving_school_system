@@ -9,6 +9,7 @@ import traceback
 
 from sqlalchemy.exc import DatabaseError, NoResultFound
 
+from app.util import VehicleStatus
 from app.vehicle.models import VehicleManufacturer, Vehicle
 from app.extensions import db
 
@@ -18,17 +19,38 @@ db_session = db.session
 
 class VehicleService:
     @staticmethod
-    def get_all_data(offset:int, limit: int, only_manufacturers: bool=True):
+    def get_all_data(offset: int=None, limit: int=None, only_manufacturers: bool = True, status: str = None):
         all_results = []
         try:
-            results = None
             if only_manufacturers:
-                results = db_session.query(VehicleManufacturer).filter().offset(offset).limit(limit).all()
+                results = db_session.query(VehicleManufacturer)
+            else:
+                results = db_session.query(Vehicle)
+
+            if status:
+                results = results.filter(Vehicle.status == status)
+
+            if offset:
+                results = results.offset(offset)
+            if limit:
+                results = results.limit(limit)
+
+            results.all()
             for result in results:
-                all_results.append({
-                    "manufacturer_id": result.manufacturer_id,
-                    "manufacturer": result.manufacturer
-                })
+
+                if only_manufacturers:
+                    all_results.append({
+                        "manufacturer_id": result.manufacturer_id,
+                        "manufacturer": result.manufacturer
+                    })
+                else:
+                    all_results.append({
+                        "vehicle_id": result.vehicle_id,
+                        "model": result.model,
+                        "registration_no": result.registration_no,
+                        "manufacturer": result.manufacturer.manufacturer,
+                        "status": result.status.value,
+                    })
 
         except DatabaseError as e:
             print(traceback.format_exc())
@@ -37,4 +59,5 @@ class VehicleService:
             print(traceback.format_exc())
 
         return all_results
+
 
