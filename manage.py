@@ -34,10 +34,10 @@ def create():
 # create command function
 @click.command(name='seed_db')
 @click.option("--all_tables", default=False, show_default=True, is_flag=True, help="Seed all the tables")
-@click.option("--table", default="", show_default=True, is_flag=False,
+@click.option("--table", default="all", show_default=True, is_flag=False,
               help="Seed table like vehicle_manufacturer, user_role")
 @with_appcontext
-def seed_db(all_tables, table=""):
+def seed_db(all_tables, table="all"):
     """Seed data to the database."""
     print("Database Seeding Process Successfully Started.")
     try:
@@ -47,9 +47,9 @@ def seed_db(all_tables, table=""):
         cc = CustomCommnds(database=db)
         if table == "vehicle_manufacturer":
             cc.seed_vehicle_manufacturers()
-        elif table == "usr_role":
+        elif table == "user_role":
             cc.seed_user_roles()
-        else:
+        elif table != "all":
             print("Invalid value for --table. valid values are vehicle_manufacturer, user_role")
 
         if all_tables:

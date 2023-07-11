@@ -19,8 +19,7 @@ class UserRole(db.Model):
     # rlationship
     users = db.relationship('User', backref='user_role', cascade=CASCADE)
 
-    def __init__(self, user_role_id, user_role, status):
-        self.user_role_id = user_role_id
+    def __init__(self, user_role, status):
         self.user_role = user_role
         self.status = status
 
