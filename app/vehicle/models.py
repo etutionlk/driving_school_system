@@ -36,9 +36,12 @@ class Vehicle(db.Model):
     # relationships
     lesson_schedules = db.relationship('LessonSchedule', backref='vehicle', cascade=CASCADE)
 
-    def __init__(self, vehicle_id, model):
-        self.vehicle_id = vehicle_id
+    def __init__(self, model="", registration_no="", manufacturer_id=0, status=None):
         self.model = model
+        self.registration_no = registration_no
+        self.manufacturer_id = manufacturer_id
+        self.status = status
+
 
     def __repr__(self):
         return '<Vehicle %r %r>' % self.vehicle_id, self.model

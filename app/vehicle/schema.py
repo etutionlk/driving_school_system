@@ -13,7 +13,7 @@ vehicle_model = vehicle.model("Vehicle", {
     "model": fields.String,
     "registration_no": fields.String,
     "manufacturer_id": fields.Integer
-})
+}, strict=True)
 
 vehicle_manufacturer_response_model = vehicle.model("VehicleManufacturerResponse", {
     "manufacturer_id": fields.String(default=1),

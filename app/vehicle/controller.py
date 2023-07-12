@@ -5,10 +5,13 @@ Contact : etutionlk@gmail.com
 Time : 09/07/2023 7:49 PM
 Desc: controller.py
 """
+import traceback
 from http import HTTPStatus
 
 from flask import request, make_response, jsonify
 from flask_restx import Resource
+
+from app.util.dto import VehicleDTO
 from app.vehicle.schema import vehicle, vehicle_model, vehicle_success_response, vehicle_error_response, \
     vehicle_manufacturer_response_model
 from app.vehicle.service import VehicleService
@@ -48,7 +51,15 @@ class VehicleCreate(Resource):
     @vehicle.expect(vehicle_model, validate=True)
     def post(self):
         """Add a vehicle to the driving school"""
-        pass
+        try:
+            request_data = request.get_json()
+            vehicle_dto = VehicleDTO(**request_data)
+            print(vehicle_dto)
+
+            VehicleService.save_vehicle(vehicle=vehicle_dto)
+            return make_response(jsonify({"message": "Vehicle is added successfully."}), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
 
 @vehicle.route("/vehicle/all")

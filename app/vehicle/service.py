@@ -10,6 +10,8 @@ import traceback
 from sqlalchemy.exc import DatabaseError, NoResultFound
 
 from app.util import VehicleStatus
+from app.util.dto import VehicleDTO
+from app.util.exceptions import NoResultFoundException
 from app.vehicle.models import VehicleManufacturer, Vehicle
 from app.extensions import db
 
@@ -19,7 +21,8 @@ db_session = db.session
 
 class VehicleService:
     @staticmethod
-    def get_all_data(offset: int = None, limit: int = None, only_manufacturers: bool = True, status: str = None):
+    def get_all_data(offset: int = None, limit: int = None, only_manufacturers: bool = True, status: str = None) \
+            -> list:
         all_results = []
         try:
             if only_manufacturers:
@@ -55,20 +58,21 @@ class VehicleService:
         return all_results
 
     @staticmethod
-    def get_data_by_id(record_id: int, is_manufacturer: bool = False):
+    def get_data_by_id(record_id: int, is_manufacturer: bool = False) -> dict:
         result = {}
         try:
             if is_manufacturer:
                 results = db_session.query(VehicleManufacturer). \
                     filter(VehicleManufacturer.manufacturer_id == record_id).first()
-                result = {"manufacturer_id": results.manufacturer_id, "manufacturer": results.manufacturer}
-
+                result = {"manufacturer_id": results.manufacturer_id,
+                          "manufacturer": results.manufacturer} if results else {}
 
             else:
                 results = db_session.query(Vehicle).filter(Vehicle.vehicle_id == record_id).first()
                 result = {"vehicle_id": results.vehicle_id, "model": results.model,
                           "registration_no": results.registration_no,
-                          "manufacturer": results.manufacturer.manufacturer, "status": results.status.value}
+                          "manufacturer": results.manufacturer.manufacturer,
+                          "status": results.status.value} if results else {}
 
         except DatabaseError as e:
             print(traceback.format_exc())
@@ -77,3 +81,24 @@ class VehicleService:
             print(traceback.format_exc())
 
         return result
+
+    @staticmethod
+    def save_vehicle(vehicle: VehicleDTO) -> bool:
+        try:
+            has_manufacturer = VehicleService.get_data_by_id(record_id=vehicle.manufacturer_id, is_manufacturer=True)
+
+            if len(has_manufacturer) == 0:
+                raise ValueError("Invalid Manufacturer ID.")
+
+            db_session.add(Vehicle(model=vehicle.model, registration_no=vehicle.registration_no,
+                                   manufacturer_id=vehicle.manufacturer_id, status=VehicleStatus.WORKING))
+
+            db_session.commit()
+
+        except DatabaseError as e:
+            print(traceback.format_exc())
+            raise e
+        except NoResultFound as e:
+            print(traceback.format_exc())
+
+        return True

@@ -5,13 +5,9 @@ Contact : etutionlk@gmail.com
 Time : 02/07/2023 7:55 PM
 Desc: dto.py
 """
-import enum
 from datetime import datetime, date
 from typing import Optional
-
-import pydantic
 from pydantic import BaseModel, constr, field_validator
-
 from app.util import Sex, CandidateStatus, Title
 
 
@@ -47,4 +43,10 @@ class CandidateUpdateDTO(BaseModel):
             return Title[value]
         else:
             raise ValueError("Rev. Mr. Mrs. Ms.")
+
+
+class VehicleDTO(BaseModel):
+    model: constr(min_length=3)
+    registration_no: constr(min_length=4)
+    manufacturer_id: int
 
