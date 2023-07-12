@@ -11,7 +11,7 @@ from sqlalchemy.exc import NoResultFound, DatabaseError
 from app.candidate.models import Candidate
 from app.extensions import db
 from app.util.dto import CandidateDTO
-from app.util.exceptions import NoResultFoundException
+from app.util.exceptions import NoResultFoundException, DataIsEmptyException
 
 db_session = db.session
 
@@ -91,6 +91,9 @@ class CandidateService:
 
             if len(has_candidate) == 0:
                 raise NoResultFoundException(message="No Candidate Found.")
+
+            if len(data) == 0:
+                raise DataIsEmptyException(message="Update data is empty.")
 
             db_session.query(Candidate).filter(Candidate.candidate_id == candidate_id).update(data)
             db_session.commit()

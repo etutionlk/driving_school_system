@@ -11,7 +11,7 @@ from sqlalchemy.exc import DatabaseError, NoResultFound
 
 from app.util import VehicleStatus
 from app.util.dto import VehicleDTO
-from app.util.exceptions import NoResultFoundException
+from app.util.exceptions import NoResultFoundException, DataIsEmptyException
 from app.vehicle.models import VehicleManufacturer, Vehicle
 from app.extensions import db
 
@@ -100,5 +100,53 @@ class VehicleService:
             raise e
         except NoResultFound as e:
             print(traceback.format_exc())
+
+        return True
+
+    @staticmethod
+    def update_vehicle(vehicle_id: int, data: dict) -> bool:
+        try:
+            # check vehicle is exists
+            has_vehicle = VehicleService.get_data_by_id(record_id=vehicle_id)
+
+            if len(has_vehicle) == 0:
+                raise NoResultFoundException(message="No Vehicle Found.")
+
+            if "manufacturer_id" in data:
+                has_manufacturer = VehicleService.get_data_by_id(record_id=data["manufacturer_id"],
+                                                                 is_manufacturer=True)
+
+                if len(has_manufacturer) == 0:
+                    raise ValueError("Invalid Manufacturer ID.")
+
+            if "status" in data and  not VehicleStatus.has_value(data["status"]):
+                raise ValueError("Invalid Vehicle Status.")
+
+            if len(data) == 0:
+                raise DataIsEmptyException(message="Update data is empty.")
+
+            db_session.query(Vehicle).filter(Vehicle.vehicle_id == vehicle_id).update(data)
+            db_session.commit()
+        except DatabaseError as e:
+            print(traceback.format_exc())
+            raise e
+        except Exception as e:
+            print(traceback.format_exc())
+            raise e
+
+        return True
+
+    @staticmethod
+    def delete_candidate(vehicle_id: int) -> bool:
+        try:
+            record = db_session.query(Vehicle).filter(Vehicle.vehicle_id == vehicle_id).one()
+            db_session.delete(record)
+            db_session.commit()
+        except DatabaseError as e:
+            print(traceback.format_exc())
+            raise e
+        except NoResultFound as e:
+            print(traceback.format_exc())
+            raise NoResultFoundException(message="Vehicle is not found.")
 
         return True

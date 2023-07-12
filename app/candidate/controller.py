@@ -46,7 +46,8 @@ class Candidate(Resource):
             candidate_dto = CandidateUpdateDTO(**request_data)
             filtered_date = {k: v for k, v in candidate_dto.model_dump().items() if v is not None}
             CandidateService.update_candidate(candidate_id=candidate_id, data=filtered_date)
-            return make_response(jsonify({"message": "candidate updated successfully."}), HTTPStatus.CREATED)
+            return make_response(jsonify({"message": "Candidate updated successfully.",
+                                          "is_error": False}), HTTPStatus.CREATED)
         except Exception as e:
             print(traceback.format_exc())
             return make_response(jsonify({"message": str(e), "is_error": True}), HTTPStatus.INTERNAL_SERVER_ERROR)
@@ -56,7 +57,8 @@ class Candidate(Resource):
         try:
             CandidateService.delete_candidate(candidate_id=candidate_id)
 
-            return make_response(jsonify({"message": "candidate deleted successfully."}), HTTPStatus.CREATED)
+            return make_response(jsonify({"message": "Candidate deleted successfully.",
+                                          "is_error": False}), HTTPStatus.CREATED)
         except Exception as e:
             return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
@@ -81,7 +83,8 @@ class CandidateCreate(Resource):
                                          registered_date=datetime.now(),
                                          status=CandidateStatus.ENABLED)
             CandidateService.save_candidate(candidate_data=candidate_dto)
-            return make_response(jsonify({"message": "candidate added successfully."}), HTTPStatus.CREATED)
+            return make_response(jsonify({"message": "Candidate added successfully.",
+                                          "is_error": False}), HTTPStatus.CREATED)
         except Exception as e:
             return make_response(jsonify({"message": str(e), "is_error": True}),
                                  HTTPStatus.INTERNAL_SERVER_ERROR)

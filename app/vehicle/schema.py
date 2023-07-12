@@ -15,6 +15,12 @@ vehicle_model = vehicle.model("Vehicle", {
     "manufacturer_id": fields.Integer
 }, strict=True)
 
+vehicle_update_model = vehicle.model("VehicleUpdate", {
+    "model": fields.String,
+    "registration_no": fields.String,
+    "manufacturer_id": fields.Integer
+})
+
 vehicle_manufacturer_response_model = vehicle.model("VehicleManufacturerResponse", {
     "manufacturer_id": fields.String(default=1),
     "manufacturer": fields.String(default="Toyota")
@@ -26,5 +32,6 @@ vehicle_error_response = vehicle.model("ErrorResponse", {
 })
 
 vehicle_success_response = vehicle.model("SuccessResponse", {
-    "message": fields.String(default="Success")
+    "message": fields.String(default="Success"),
+    "is_error": fields.Boolean(default=False)
 })

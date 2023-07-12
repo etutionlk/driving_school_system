@@ -11,9 +11,9 @@ from http import HTTPStatus
 from flask import request, make_response, jsonify
 from flask_restx import Resource
 
-from app.util.dto import VehicleDTO
+from app.util.dto import VehicleDTO, VehicleUpdateDTO
 from app.vehicle.schema import vehicle, vehicle_model, vehicle_success_response, vehicle_error_response, \
-    vehicle_manufacturer_response_model
+    vehicle_manufacturer_response_model, vehicle_update_model
 from app.vehicle.service import VehicleService
 
 
@@ -30,17 +30,47 @@ class Vehicle(Resource):
         except Exception as e:
             return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
+    @vehicle.response(HTTPStatus.CREATED, 'Created', vehicle_success_response, validate=True)
+    @vehicle.response(HTTPStatus.BAD_REQUEST, 'Bad Request', vehicle_error_response)
+    @vehicle.response(HTTPStatus.INTERNAL_SERVER_ERROR, 'Server Error', vehicle_error_response)
+    @vehicle.expect(vehicle_update_model, validate=True)
     def put(self, vehicle_id: int):
         """Update vehicle details"""
-        pass
+        try:
+            request_data = request.get_json()
+            vehicle_dto = VehicleUpdateDTO(**request_data)
+            filtered_date = {k: v for k, v in vehicle_dto.model_dump().items() if v is not None}
+            VehicleService.update_vehicle(vehicle_id=vehicle_id, data=filtered_date)
+            return make_response(jsonify({"message": "Vehicle updated successfully.",
+                                          "is_error": False}), HTTPStatus.CREATED)
+        except Exception as e:
+            print(traceback.format_exc())
+            return make_response(jsonify({"message": str(e), "is_error": True}), HTTPStatus.INTERNAL_SERVER_ERROR)
 
     def delete(self, vehicle_id: int):
         """Delete a vehicle"""
-        pass
+        try:
+            VehicleService.delete_candidate(vehicle_id=vehicle_id)
 
+            return make_response(jsonify({"message": "Vehicle deleted successfully.",
+                                          "is_error": False}), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
+
+    @vehicle.response(HTTPStatus.BAD_REQUEST, 'Bad Request', vehicle_error_response)
+    @vehicle.response(HTTPStatus.INTERNAL_SERVER_ERROR, 'Server Error', vehicle_error_response)
+    @vehicle.response(HTTPStatus.CREATED, 'OK', vehicle_success_response, validate=True)
+    @vehicle.param("status", "Vehicle Status", required=True)
     def patch(self, vehicle_id: int):
-        """Change an attribute of a vehicle"""
-        pass
+        """Change the status of a vehicle"""
+        try:
+            status = request.args.get('status', type=str)
+            VehicleService.update_vehicle(vehicle_id=vehicle_id, data={"status": status.upper()})
+            return make_response(jsonify({"message": "Vehicle status updated successfully.",
+                                          "is_error": False}), HTTPStatus.CREATED)
+        except Exception as e:
+            print(traceback.format_exc())
+            return make_response(jsonify({"message": str(e), "is_error": True}), HTTPStatus.INTERNAL_SERVER_ERROR)
 
 
 @vehicle.route("/vehicle")
@@ -57,7 +87,8 @@ class VehicleCreate(Resource):
             print(vehicle_dto)
 
             VehicleService.save_vehicle(vehicle=vehicle_dto)
-            return make_response(jsonify({"message": "Vehicle is added successfully."}), HTTPStatus.CREATED)
+            return make_response(jsonify({"message": "Vehicle is added successfully.",
+                                          "is_error": False}), HTTPStatus.CREATED)
         except Exception as e:
             return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 

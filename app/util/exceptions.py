@@ -14,3 +14,12 @@ class NoResultFoundException(Exception):
 
     def __str__(self):
         return self.message
+
+
+class DataIsEmptyException(Exception):
+    def __init__(self, message):
+        self.message = message
+        super(DataIsEmptyException, self).__init__(self.message)
+
+    def __str__(self):
+        return self.message

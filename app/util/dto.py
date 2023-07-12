@@ -50,3 +50,9 @@ class VehicleDTO(BaseModel):
     registration_no: constr(min_length=4)
     manufacturer_id: int
 
+
+class VehicleUpdateDTO(BaseModel):
+    model: constr(min_length=3) = None
+    registration_no: constr(min_length=4) = None
+    manufacturer_id: Optional[int] = None
+

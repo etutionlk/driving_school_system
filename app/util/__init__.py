@@ -69,3 +69,7 @@ class VehicleStatus(enum.Enum):
     NOT_WORKING = "NOT_WORKING"
     ON_SERVICING = "ON_SERVICING"
     SOLD = "SOLD"
+
+    @classmethod
+    def has_value(cls, value):
+        return value in cls._value2member_map_

@@ -31,7 +31,7 @@ candidate_update_model = candidate.model("CandidateUpdateModel", {
     "address": fields.String,
     "sex": fields.String,
     "has_vehicle_licence": fields.Boolean
-}, strict=True,)
+}, strict=True, )
 
 candidate_schedule_model = candidate.model("CandidateSchedule", {
     "lesson_date": fields.String(default="2023-01-02"),
@@ -53,12 +53,12 @@ candidate_response_model = candidate.model("CandidateResponse", {
     "schedule": fields.List(fields.Nested(candidate_schedule_model))
 })
 
-
 candidate_error_response = candidate.model("ErrorResponse", {
     "is_error": fields.Boolean(default=True),
     "message": fields.String(default="Bad Request")
 })
 
 candidate_success_response = candidate.model("SuccessResponse", {
-    "message": fields.String(default="Success")
+    "message": fields.String(default="Success"),
+    "is_error": fields.Boolean(default=False)
 })
