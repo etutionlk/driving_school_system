@@ -71,7 +71,7 @@ class CandidateService:
                                      date_of_birth=candidate_data.date_of_birth,
                                      mobile_no_1=candidate_data.mobile_no_1, nic_no=candidate_data.nic_no,
                                      mobile_no_2=candidate_data.mobile_no_2, address=candidate_data.address,
-                                     sex=candidate_data.sex, has_vehicle_licence=candidate_data.has_vehicle_licence,
+                                     sex=candidate_data.sex, has_vehicle_license=candidate_data.has_vehicle_license,
                                      registered_date=candidate_data.registered_date, status=candidate_data.status))
             db_session.commit()
         except DatabaseError as e:

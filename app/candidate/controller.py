@@ -79,7 +79,7 @@ class CandidateCreate(Resource):
                                              "mobile_no_2"] if "mobile_no_2" in request_data else None,
                                          address=request_data["address"],
                                          sex=request_data["sex"].upper(),
-                                         has_vehicle_licence=request_data["has_vehicle_licence"],
+                                         has_vehicle_license=request_data["has_vehicle_license"],
                                          registered_date=datetime.now(),
                                          status=CandidateStatus.ENABLED)
             CandidateService.save_candidate(candidate_data=candidate_dto)

@@ -22,13 +22,13 @@ class Candidate(db.Model):
     nic_no = db.Column(db.String(40), unique=True, nullable=False, comment="National Identity Card No.", index=True)
     address = db.Column(db.Text, nullable=True)
     sex = db.Column(db.Enum(Sex), nullable=False)
-    has_vehicle_licence = db.Column(db.Boolean, nullable=False,
+    has_vehicle_license = db.Column(db.Boolean, nullable=False,
                                     comment='if already have license true otherwise false')
     registered_date = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.Enum(CandidateStatus), nullable=False)
 
     # relationships
-    licence_categories = db.relationship('CandidateLicenceCategory', backref='candidate', cascade=CASCADE)
+    license_categories = db.relationship('CandidateLicenseCategory', backref='candidate', cascade=CASCADE)
     written_exams = db.relationship('WrittenExam', backref='candidate', cascade=CASCADE)
     lesson_schedules = db.relationship('LessonSchedule', backref='candidate', cascade=CASCADE)
     payments = db.relationship('CandidatePayment', backref='candidate', cascade=CASCADE)

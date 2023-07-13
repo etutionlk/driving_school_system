@@ -18,7 +18,7 @@ candidate_model = candidate.model("Candidate", {
     "nic_no": fields.String(required=True),
     "address": fields.String,
     "sex": fields.String(required=True),
-    "has_vehicle_licence": fields.Boolean(required=True)
+    "has_vehicle_license": fields.Boolean(required=True)
 }, strict=True)
 
 candidate_update_model = candidate.model("CandidateUpdateModel", {
@@ -30,7 +30,7 @@ candidate_update_model = candidate.model("CandidateUpdateModel", {
     "nic_no": fields.String,
     "address": fields.String,
     "sex": fields.String,
-    "has_vehicle_licence": fields.Boolean
+    "has_vehicle_license": fields.Boolean
 }, strict=True, )
 
 candidate_schedule_model = candidate.model("CandidateSchedule", {

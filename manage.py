@@ -49,6 +49,8 @@ def seed_db(all_tables, table="all"):
             cc.seed_vehicle_manufacturers()
         elif table == "user_role":
             cc.seed_user_roles()
+        elif table == "license_class":
+            cc.seed_license_class()
         elif table != "all":
             print("Invalid value for --table. valid values are vehicle_manufacturer, user_role")
 

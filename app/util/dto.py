@@ -20,7 +20,7 @@ class CandidateDTO(BaseModel):
     nic_no: constr()
     address: Optional[constr()] = None
     sex: Sex
-    has_vehicle_licence: bool
+    has_vehicle_license: bool
     registered_date: datetime
     status: CandidateStatus
 
@@ -34,7 +34,7 @@ class CandidateUpdateDTO(BaseModel):
     nic_no: Optional[constr()] = None
     address: Optional[constr()] = None
     sex: Optional[Sex] = None
-    has_vehicle_licence: Optional[bool] = None
+    has_vehicle_license: Optional[bool] = None
 
     @field_validator("title", mode="before")
     def title_validation(cls, value):

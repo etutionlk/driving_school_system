@@ -11,12 +11,13 @@ import traceback
 
 from sqlalchemy import inspect
 
-from app import VehicleManufacturer, UserRole
+from app import VehicleManufacturer, UserRole, LicenseClass
 from app.util import UserStatus
 
 # data files
 MANUFACTURER_DATA_CSV_FILE = os.environ.get("MANUFACTURER_DATA_CSV_FILE", "data/car_manufacturers.csv")
 USER_ROLE_DATA_CSV_FILE = os.environ.get("USER_ROLE_DATA_CSV_FILE", "data/user_roles.csv")
+LICENSE_CLASS_DATA_CSV_FILE = os.environ.get("LICENSE_CLASS_DATA_CSV_FILE", "data/license_classes.csv")
 
 
 class CustomCommnds:
@@ -93,6 +94,44 @@ class CustomCommnds:
             print(traceback.format_exc())
             print(str(e))
 
+
+
+    def seed_license_class(self):
+        try:
+            inspector = inspect(self.db.engine)
+
+            if not os.path.isfile(MANUFACTURER_DATA_CSV_FILE):
+                print(
+                    "License Classes csv file is not there. Copy th csv file to data directory and re-run the command")
+                return
+            if not inspector.has_table("license_class"):
+                print(
+                    "license_class table is not in the database.Use create_db command to create the database and "
+                    "re-run the seed_db command")
+                return
+
+            # check data is exists or not
+            classes = [cls.license_class.lower() for cls in self.db.session.query(LicenseClass).all()]
+
+            insert__license_classes = []
+            with open(LICENSE_CLASS_DATA_CSV_FILE, 'r') as file:
+                csv_reader = csv.reader(file, delimiter='\t')
+                for row in csv_reader:
+                    if row[1].lower() not in classes:
+                        insert__license_classes.append(LicenseClass(license_class=row[1], description=row[0],
+                                                                    other_eligible_classes=row[2]))
+
+            if len(insert__license_classes) > 0:
+                print("Seeding license_class table...")
+                self.db.session.add_all(insert__license_classes)
+                self.db.session.commit()
+            else:
+                print("No changes in license_class table.")
+        except Exception as e:
+            print(traceback.format_exc())
+            print(str(e))
+
     def seed_all_tables(self):
         self.seed_vehicle_manufacturers()
         self.seed_user_roles()
+        self.seed_license_class()
