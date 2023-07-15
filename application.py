@@ -11,7 +11,7 @@ migrate = Migrate()
 app.config.from_object('config.ProductionConfig')
 
 
-api = Api(app=app, version="1.0", title="Driving School Management API",
+api = Api(app=app, version="v1.0.1", title="Driving School Management API",
           description="This is th API collection of the driving school management system")
 
 register_routes(api)

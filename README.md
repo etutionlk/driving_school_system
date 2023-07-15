@@ -50,3 +50,9 @@ sudo apt-get install libmysqlclient-dev
 flask --app application run --host=0.0.0.0 --port=8001 --debug
 
 ```
+
+
+### Build Docker image
+
+```sudo docker buildx build --no-cache --file Dockerfile --tag core-driving-school-system-gen1-srv:v0.4.0 .
+```

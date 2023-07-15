@@ -37,3 +37,21 @@ class LicenseService:
             print(traceback.format_exc())
 
         return all_results
+
+    @staticmethod
+    def get_single_license_class(license_class: str):
+        results = {}
+        try:
+            result = db_session.query(LicenseClass).filter(LicenseClass.license_class == license_class).one()
+            results = {"license_class_id": result.license_class_id,
+                       "license_class": result.license_class,
+                       "description": result.description,
+                       "other_eligible_classes": result.other_eligible_classes.split(",")}
+
+        except DatabaseError as e:
+            print(traceback.format_exc())
+            raise e
+        except NoResultFound as e:
+            print(traceback.format_exc())
+
+        return results

@@ -36,7 +36,7 @@ class LicenseCategory(db.Model):
     description = db.Column(db.Text, nullable=True)
     skilled_category_fee = db.Column(db.Float, nullable=False)
     unskilled_category_fee = db.Column(db.Float, nullable=False)
-    skilled_no_of_lessons = db.Column(db.Integer, nullable=False)
+    skilled_no_of_lessons = db.Column(db.Integer, nullable=False, default=0)
     unskilled_no_of_lessons = db.Column(db.Integer, nullable=False)
     status = db.Column(db.Enum(Status), nullable=False)
 
