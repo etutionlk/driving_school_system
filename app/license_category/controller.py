@@ -10,8 +10,11 @@ from http import HTTPStatus
 from flask import make_response, jsonify, request
 from flask_restx import Resource
 
-from app.license_category.schema import license_category, license_response_model, license_error_response
+from app.license_category.schema import license_category, license_response_model, license_error_response, \
+    license_category_response_model, license_category_error_response, license_category_model, \
+    license_category_success_response
 from app.license_category.service import LicenseService
+from app.util.dto import LicenseCategoryDTO
 
 
 @license_category.route("/license/all_approved_license_classes")
@@ -38,7 +41,7 @@ class SingleLicenseClass(Resource):
         """Get a single license classes"""
         try:
             license_class = request.args.get('license_class', type=str)
-            results = LicenseService.get_single_license_class(license_class=license_class.upper())
+            results = LicenseService.get_license_class_by_class(license_class=license_class.upper())
             return make_response(jsonify(results), HTTPStatus.CREATED)
         except Exception as e:
             return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
@@ -47,9 +50,15 @@ class SingleLicenseClass(Resource):
 @license_category.route("/license/license_category/<int:license_category_id>")
 class LicenseCategory(Resource):
 
+    @license_category.response(HTTPStatus.CREATED, 'Created', license_category_response_model, validate=True)
+    @license_category.response(HTTPStatus.BAD_REQUEST, 'Bad Request', license_category_error_response)
     def get(self, license_category_id: int):
         """Get a single License Category"""
-        pass
+        try:
+            results = LicenseService.get_license_category_by_id(license_category_id=license_category_id)
+            return make_response(jsonify(results), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
     def put(self, license_category_id: int):
         """Update a single License Category"""
@@ -63,13 +72,39 @@ class LicenseCategory(Resource):
 @license_category.route("/license/license_category")
 class LicenseCategoryPost(Resource):
 
+    @license_category.expect(license_category_model, validate=True)
+    @license_category.response(HTTPStatus.CREATED, 'Created', license_category_success_response, validate=True)
+    @license_category.response(HTTPStatus.BAD_REQUEST, 'Bad Request', license_category_error_response)
     def post(self):
         """Create a License Category"""
-        pass
+        try:
+            request_data = request.get_json()
+            license_cat = LicenseCategoryDTO(**request_data)
+
+            LicenseService.save_license_category(license_category=license_cat)
+            return make_response(jsonify({"message": "License Category is added successfully.",
+                                          "is_error": False}), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
 
 @license_category.route("/license/all_license_categories")
 class AllLicenseCategories(Resource):
+
+    @license_category.param("offset", "Offset")
+    @license_category.param("limit", "Limit")
+    @license_category.param("status", "License Category Status")
+    @license_category.response(HTTPStatus.CREATED, 'Created', [license_category_response_model], validate=True)
     def get(self):
         """Get All License Categories"""
-        pass
+        try:
+            offset = request.args.get('offset', type=int)
+            limit = request.args.get('limit', type=int)
+            status = request.args.get('status', type=str)
+
+            results = LicenseService.get_all_license_categories(offset=offset if offset else None,
+                                                                limit=limit if limit else None,
+                                                                status=status if status else None)
+            return make_response(jsonify(results), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)

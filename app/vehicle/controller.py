@@ -50,7 +50,7 @@ class Vehicle(Resource):
     def delete(self, vehicle_id: int):
         """Delete a vehicle"""
         try:
-            VehicleService.delete_candidate(vehicle_id=vehicle_id)
+            VehicleService.delete_vehicle(vehicle_id=vehicle_id)
 
             return make_response(jsonify({"message": "Vehicle deleted successfully.",
                                           "is_error": False}), HTTPStatus.CREATED)

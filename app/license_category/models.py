@@ -43,10 +43,6 @@ class LicenseCategory(db.Model):
     # relationships
     candidates = db.relationship('CandidateLicenseCategory', backref='license_category', cascade=CASCADE)
 
-    def __init__(self, license_category_id, license_category):
-        self.license_category_id = license_category_id
-        self.license_category = license_category
-
     def __repr__(self):
         return '<LicenseCategory %r %r>' % self.license_category_id, self.license_category
 

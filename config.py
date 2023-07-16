@@ -19,6 +19,6 @@ class Config(object):
 
 class ProductionConfig(Config):
     DEVELOPMENT = False
-    DEBUG = False
+    DEBUG_MODE = bool(os.environ.get("DEBUG_MODE", "True"))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI", "")
+    SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI", "mysql+pymysql://root:letmein@localhost:3306/driving_school")

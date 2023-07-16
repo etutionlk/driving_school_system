@@ -21,4 +21,4 @@ migrate.init_app(app, db)
 add_command(app)
 app.app_context().push()
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=app.config.get("DEBUG_MODE"))

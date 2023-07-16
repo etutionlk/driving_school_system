@@ -77,7 +77,7 @@ class VehicleService:
         except DatabaseError as e:
             print(traceback.format_exc())
             raise e
-        except NoResultFound as e:
+        except NoResultFound:
             print(traceback.format_exc())
 
         return result
@@ -137,7 +137,7 @@ class VehicleService:
         return True
 
     @staticmethod
-    def delete_candidate(vehicle_id: int) -> bool:
+    def delete_vehicle(vehicle_id: int) -> bool:
         try:
             record = db_session.query(Vehicle).filter(Vehicle.vehicle_id == vehicle_id).one()
             db_session.delete(record)

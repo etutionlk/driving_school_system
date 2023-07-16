@@ -8,5 +8,8 @@ services:
       DEBUG: "False"
       SQLALCHEMY_TRACK_MODIFICATIONS: "False"
       SQLALCHEMY_DATABASE_URI: ""
+      MANUFACTURER_DATA_CSV_FILE: "data/car_manufacturers.csv"
+      USER_ROLE_DATA_CSV_FILE: "data/user_roles.csv"
+      LICENSE_CLASS_DATA_CSV_FILE: "data/license_classes.csv"
 
     image: "core-driving-school-system-gen1-srv:v0.4.0"
