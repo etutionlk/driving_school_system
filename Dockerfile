@@ -19,11 +19,12 @@ COPY --chown=${RUNTIME_USER}:${RUNTIME_USER} ./requirements.txt .
 RUN python3 -m pip install -r requirements.txt
 
 RUN mkdir -p ${HOME}/app
-COPY --chown=${RUNTIME_USER}:${RUNTIME_USER} . ./app
+RUN mkdir -p ${HOME}/app/app
+RUN mkdir -p ${HOME}/app/data
+COPY --chown=${RUNTIME_USER}:${RUNTIME_USER} app ./app/app/
+COPY --chown=${RUNTIME_USER}:${RUNTIME_USER} data ./app/data/
+COPY --chown=${RUNTIME_USER}:${RUNTIME_USER} *.py ./app/
 WORKDIR ${HOME}/app
 
 EXPOSE 5000
-CMD [ "flask", "--app", "application", "run" ]
-
-#ENTRYPOINT ["tail"]
-#CMD ["-f", "/dev/null"]
+CMD [ "flask", "--app", "application", "run", "--host=0.0.0.0"]

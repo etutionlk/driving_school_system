@@ -2,11 +2,11 @@ services:
   web:
     build: .
     ports:
-      - "8080:8080"
+      - "80:80"
     environment:
       DEVELOPMENT: "False"
       DEBUG: "False"
       SQLALCHEMY_TRACK_MODIFICATIONS: "False"
-      SQLALCHEMY_DATABASE_URI: "mysql+pymysql://root:letmein@localhost:3306/driving_school"
+      SQLALCHEMY_DATABASE_URI: ""
 
     image: "core-driving-school-system-gen1-srv:v0.4.0"

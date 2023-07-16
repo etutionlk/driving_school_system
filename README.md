@@ -26,7 +26,7 @@ Run flask app
 
 Initialize the db migrations
 
-```flask --app applicaation db init```
+```flask --app application db init```
 
 Start database migration
 
