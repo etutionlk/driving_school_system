@@ -35,7 +35,16 @@ license_category_model = license_category.model("LicenseCategoryRequest", {
     "unskilled_category_fee": fields.Float(),
     "skilled_no_of_lessons": fields.Integer(),
     "unskilled_no_of_lessons": fields.Integer()
-})
+}, strict=True)
+
+license_update_category_model = license_category.model("LicenseCategoryUpdateRequest", {
+    "description": fields.String(),
+    "skilled_category_fee": fields.Float(),
+    "unskilled_category_fee": fields.Float(),
+    "skilled_no_of_lessons": fields.Integer(),
+    "unskilled_no_of_lessons": fields.Integer(),
+    "status": fields.String()
+}, strict=True)
 
 license_category_error_response = license_error_response = license_category.model("ErrorResponse", {
     "message": fields.String(default="Bad Request"),

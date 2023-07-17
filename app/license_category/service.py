@@ -12,6 +12,7 @@ from sqlalchemy.exc import DatabaseError, NoResultFound
 from app.license_category.models import LicenseClass, LicenseCategory, CandidateLicenseCategory
 from app.extensions import db
 from app.util.dto import LicenseCategoryDTO
+from app.util.exceptions import NoResultFoundException
 
 db_session = db.session
 
@@ -190,5 +191,26 @@ class LicenseService:
             raise e
         except NoResultFound as e:
             print(traceback.format_exc())
+
+        return True
+
+    @staticmethod
+    def delete_license_category(license_category_id: int) -> bool:
+        try:
+            has_license_category = LicenseService.get_license_category_by_id(license_category_id=license_category_id)
+
+            if len(has_license_category) == 0:
+                raise ValueError("Invalid License Category ID")
+
+            record = db_session.query(LicenseCategory).filter(LicenseCategory.license_category_id ==
+                                                              license_category_id).one()
+            db_session.delete(record)
+            db_session.commit()
+        except DatabaseError as e:
+            print(traceback.format_exc())
+            raise e
+        except NoResultFound as e:
+            print(traceback.format_exc())
+            raise NoResultFoundException(message="License Category is not found.")
 
         return True

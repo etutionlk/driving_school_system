@@ -12,7 +12,7 @@ from flask_restx import Resource
 
 from app.license_category.schema import license_category, license_response_model, license_error_response, \
     license_category_response_model, license_category_error_response, license_category_model, \
-    license_category_success_response
+    license_category_success_response, license_update_category_model
 from app.license_category.service import LicenseService
 from app.util.dto import LicenseCategoryDTO
 
@@ -60,13 +60,22 @@ class LicenseCategory(Resource):
         except Exception as e:
             return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
+    @license_category.expect(license_update_category_model, validate=True)
+    @license_category.response(HTTPStatus.CREATED, 'Created', license_category_success_response, validate=True)
+    @license_category.response(HTTPStatus.BAD_REQUEST, 'Bad Request', license_category_error_response)
     def put(self, license_category_id: int):
         """Update a single License Category"""
         pass
 
     def delete(self, license_category_id: int):
         """Delete a Licene Category"""
-        pass
+        try:
+            VehicleService.delete_vehicle(vehicle_id=vehicle_id)
+
+            return make_response(jsonify({"message": "Vehicle deleted successfully.",
+                                          "is_error": False}), HTTPStatus.CREATED)
+        except Exception as e:
+            return make_response(jsonify({"is_error": True, "message": str(e)}), HTTPStatus.BAD_REQUEST)
 
 
 @license_category.route("/license/license_category")
