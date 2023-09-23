@@ -8,7 +8,7 @@ Desc: dto.py
 from datetime import datetime, date
 from typing import Optional
 from pydantic import BaseModel, constr, field_validator
-from app.util import Sex, CandidateStatus, Title, Status
+from app.util import Sex, CandidateStatus, Title, Status, ExamStatus
 
 
 class CandidateDTO(BaseModel):
@@ -66,3 +66,8 @@ class LicenseCategoryDTO(BaseModel):
     unskilled_no_of_lessons: int
     status: Status = Status.ENABLED
 
+
+class TrialDTO(BaseModel):
+    candidate_id: int
+    trial_date: date
+    status: ExamStatus

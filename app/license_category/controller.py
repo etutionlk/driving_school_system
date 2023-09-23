@@ -68,9 +68,9 @@ class LicenseCategory(Resource):
         pass
 
     def delete(self, license_category_id: int):
-        """Delete a Licene Category"""
+        """Delete a License Category"""
         try:
-            VehicleService.delete_vehicle(vehicle_id=vehicle_id)
+            LicenseService.delete_license_category(license_category_id=license_category_id)
 
             return make_response(jsonify({"message": "Vehicle deleted successfully.",
                                           "is_error": False}), HTTPStatus.CREATED)
